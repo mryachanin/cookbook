@@ -10,7 +10,7 @@
       <h3>Ingredients</h3>
       <ul>
         {{range .Ingredients}}
-        <li>{{.Quantity}} {{.Name}}</li>
+        <li>{{.Quantity}} {{.Name}}{{if .Prep}}&nbsp({{.Prep}})&nbsp{{end}}</li>
         {{end}}
       </ul>
       <h3>Instructions</h3>
