@@ -8,30 +8,8 @@ import (
 	"net/http"
 	"path"
   "path/filepath"
+  "./yaml/recipe"
 )
-
-type Ingredient struct {
-  Quantity string
-  Name string
-}
-
-type Source struct {
-  Name string
-  Link string
-}
-
-type Recipe struct {
-  Name string
-  Ingredients []Ingredient
-  Instructions []string
-  Yields string
-  Keeps_for string
-  Prep_time string
-  Total_time string
-  Notes []string
-  Tags []string
-  Source Source
-}
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	recipes, err := getRecipes()
@@ -43,8 +21,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, recipes)
 }
 
-func getRecipes() ([]Recipe, error) {
-  recipes := []Recipe{}
+func getRecipes() ([]recipe.Recipe, error) {
+  recipes := []recipe.Recipe{}
   paths, err := filepath.Glob("public/recipes/*")
   if (err != nil) {
     return nil, err
@@ -55,7 +33,7 @@ func getRecipes() ([]Recipe, error) {
       return nil, err
   	}
 
-    var r Recipe
+    var r recipe.Recipe
     if err = yaml.Unmarshal(b, &r); err != nil {
   		return nil, err
   	}
