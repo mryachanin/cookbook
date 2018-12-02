@@ -1,16 +1,19 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
+	"html/template"
+	"log"
+	"net/http"
+	"path"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+func handleRequest(w http.ResponseWriter, r *http.Request) {
+	data := "Hello World!"
+	t := template.Must(template.ParseFiles(path.Join("templates", "index.html")))
+	t.Execute(w, data)
 }
 
 func main() {
-    http.HandleFunc("/", handler)
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	http.HandleFunc("/", handleRequest)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
