@@ -2,80 +2,50 @@
 name: Vegan "No Tuna" Salad Sandwich
 ingredients:
 -
-  quantity:
-    15 oz
-  name:
-    Can chickpeas, rinsed + drained
+  quantity: 15 oz
+  name: Can chickpeas, rinsed + drained
 -
-  quantity:
-    3 Tbsp
-  name:
-    Vegan mayonnaise
+  quantity: 3 Tbsp
+  name: Vegan mayonnaise
 -
-  quantity:
-    1 Tbsp
-  name:
-    Tahini
+  quantity: 1 Tbsp
+  name: Tahini
 -
-  quantity:
-    1 Tbsp
-  name:
-    Dijon/spicy mustard
+  quantity: 1 Tbsp
+  name: Dijon/spicy mustard
 -
-  quantity:
-    1 Tbsp
-  name:
-    Maple syrup or agave nectar
+  quantity: 1 Tbsp
+  name: Maple syrup or agave nectar
 -
-  quantity:
-    1/4 cup
-  name:
-    Diced red onion
+  quantity: 1/4 cup
+  name: Diced red onion
 -
-  quantity:
-    1/4 cup
-  name:
-    Diced celery
+  quantity: 1/4 cup
+  name: Diced celery
 -
-  quantity:
-    1/3 cup
-  name:
-    Diced pickle
+  quantity: 1/3 cup
+  name: Diced pickle
 -
-  quantity:
-    1 tsp
-  name:
-    Capers, drained and loosely chopped
+  quantity: 1 tsp
+  name: Capers, drained and loosely chopped
 -
-  quantity:
-    Healthy pinch
-  name:
-    Sea salt
+  quantity: Healthy pinch
+  name: Sea salt
 -
-  quantity:
-    Healthy pinch
-  name:
-    Black pepper
+  quantity: Healthy pinch
+  name: Black pepper
 -
-  quantity:
-    8 slices
-  name:
-    Bread
+  quantity: 8 slices
+  name: Bread
 -
-  quantity:
-    4 leaves
-  name:
-    Romaine lettuce
+  quantity: 4 leaves
+  name: Romaine lettuce
 -
-  quantity:
-    4-8 slices
-  name:
-    Tomato
+  quantity: 4-8 slices
+  name: Tomato
 -
-  quantity:
-    4 slices
-  name:
-    Red onion
+  quantity: 4 slices
+  name: Red onion
 instructions:
 - Add the chickpeas to a medium bowl and mash with a fork, leaving a few beans
   whole.
