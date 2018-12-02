@@ -1,6 +1,37 @@
 <html>
   <body>
     <h1>Recipes!</h1>
-    <p>{{.}}</p>
+    {{range .}}
+      <h2>{{.Name}}</h2>
+      <p>Yields: {{.Yields}}</p>
+      <p>Keeps for: {{.Keeps_for}}</p>
+      <p>Prep time: {{.Prep_time}}</p>
+      <p>Total time: {{.Total_time}}</p>
+      <h3>Ingredients</h3>
+      <ul>
+        {{range .Ingredients}}
+        <li>{{.Quantity}} {{.Name}}</li>
+        {{end}}
+      </ul>
+      <h3>Instructions</h3>
+      <ul>
+        {{range .Instructions}}
+        <li>{{.}}</li>
+        {{end}}
+      </ul>
+      <h3>Notes</h3>
+      <ul>
+        {{range .Notes}}
+        <li>{{.}}</li>
+        {{end}}
+      </ul>
+      <h3>Tags:</h3>
+      <ul>
+        {{range .Tags}}
+        <li>{{.}}</li>
+        {{end}}
+      </ul>
+      <p>Source: <a href={{.Source.Link}}>{{.Source.Name}}</a></p>
+    {{end}}
   </body>
 </html>
