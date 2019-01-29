@@ -2,12 +2,12 @@ package app
 
 import (
 	"gitlab.com/mryachanin/satisfied-vegan/api/recipe"
+	appTemplate "gitlab.com/mryachanin/satisfied-vegan/web/template"
 	"gopkg.in/yaml.v2"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"path"
 	"path/filepath"
 )
 
@@ -22,7 +22,9 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	t := template.Must(template.ParseFiles(path.Join("web/template", "index.html")))
+	templateArr := appTemplate.MustAsset("web/template/index.html")
+	t := template.New("index.html")
+	t.Parse(string(templateArr[:]))
 	t.Execute(w, recipes)
 }
 
