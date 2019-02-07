@@ -8,4 +8,3 @@ Execute: curl -X GET http://127.0.0.1:5984/_all_dbs
 
 #### Delete Database
 Execute: curl -X DELETE http://127.0.0.1:5984/satisfied_vegan
-
