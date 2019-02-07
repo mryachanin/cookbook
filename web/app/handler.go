@@ -4,23 +4,28 @@ import (
 	"gitlab.com/mryachanin/satisfied-vegan/api/recipe"
 	"gitlab.com/mryachanin/satisfied-vegan/config"
 	appTemplate "gitlab.com/mryachanin/satisfied-vegan/web/template"
-	"gopkg.in/yaml.v2"
+	"github.com/rhinoman/couchdb-go"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"path/filepath"
 	"strconv"
 )
 
-func HandleRequests(c *config.Config) {
-	http.HandleFunc("/", handleRequest)
+func HandleRequests(c *config.Config, db *couchdb.Database) {
+	http.HandleFunc("/", wrap(handleRequest, db))
 	url := c.Host + ":" + strconv.Itoa(c.Port)
 	log.Fatal(http.ListenAndServe(url, nil))
 }
 
-func handleRequest(w http.ResponseWriter, r *http.Request) {
-	recipes, err := getRecipes()
+func wrap(handler func(http.ResponseWriter, *http.Request, *couchdb.Database),
+					db *couchdb.Database) (func(w http.ResponseWriter, r *http.Request)) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r, db)
+	}
+}
+
+func handleRequest(w http.ResponseWriter, r *http.Request, db *couchdb.Database) {
+	recipes, err := getRecipes(db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -31,23 +36,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, recipes)
 }
 
-func getRecipes() ([]recipe.Recipe, error) {
-	recipes := []recipe.Recipe{}
-	paths, err := filepath.Glob("init/data/*")
-	if err != nil {
-		return nil, err
+func getRecipes(db *couchdb.Database) ([]recipe.Recipe, error) {
+	r1 := recipe.Recipe{}
+	if _, err := db.Read("Mushroom Lentil Loaf", &r1, nil); err != nil {
+		log.Fatalf("Could not load recipes. Error: %s", err)
 	}
-	for _, path := range paths {
-		b, err := ioutil.ReadFile(path)
-		if err != nil {
-			return nil, err
-		}
-
-		var r recipe.Recipe
-		if err = yaml.Unmarshal(b, &r); err != nil {
-			return nil, err
-		}
-		recipes = append(recipes, r)
+	r2:= recipe.Recipe{}
+	if _, err := db.Read("Vegan \"No Tuna\" Salad Sandwich", &r2, nil); err != nil {
+		log.Fatalf("Could not load recipes. Error: %s", err)
 	}
-	return recipes, nil
+	return []recipe.Recipe{r1, r2}, nil
 }

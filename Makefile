@@ -17,6 +17,6 @@ test:
 
 deps:
 	GOGET=$(GOCMD) get
-	$(GOGET) github.com/mattn/go-sqlite3    // Sqlite driver
+	$(GOGET) github.com/rhinoman/couchdb-go // CouchDB driver
 	$(GOGET) github.com/jteeuwen/go-bindata // Static asset wrapper-upper
 	$(GOGET) gopkg.in/yaml.v2               // YAML parser

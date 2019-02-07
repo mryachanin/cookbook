@@ -1,4 +1,10 @@
 {
   "host": "127.0.0.1",
-  "port": 8080
+  "port": 8080,
+  "database": {
+    "host": "127.0.0.1",
+    "port": 5984,
+    "username": "FILL_ME_IN",
+    "password": "FILL_ME_IN"
+  }
 }
