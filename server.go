@@ -6,12 +6,8 @@ import (
   "gitlab.com/mryachanin/satisfied-vegan/web/app"
 )
 
-const (
-  configPath = "./config.json"
-)
-
 func main() {
-  c := config.LoadConfiguration(configPath)
+  c := config.LoadConfiguration()
   db := db.Connect(c)
   app.HandleRequests(c, db)
 }

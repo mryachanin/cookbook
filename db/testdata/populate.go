@@ -15,10 +15,6 @@ import (
   "path/filepath"
 )
 
-const (
-  configPath = "./config.json"
-)
-
 var recipesPath string
 
 func init() {
@@ -34,7 +30,7 @@ func main() {
     log.Fatalf("Found no YAML recipe files at path: \"%s\"", recipesPath)
   }
 
-  c := config.LoadConfiguration(configPath)
+  c := config.LoadConfiguration()
   db := db.Connect(c)
   storeRecipes(db, recipes)
 }
