@@ -4,11 +4,11 @@ type Recipe struct {
 	Name         string
 	Ingredients  []Ingredient
 	Instructions []string
-	Yields       string
-	Keeps_for    string
-	Prep_time    string
-	Total_time   string
-	Notes        []string
-	Tags         []string
-	Source       Source
+	Yields       string   `json:",omitempty"`
+	Keeps_for    string   `json:",omitempty"`
+	Prep_time    string   `json:",omitempty"`
+	Total_time   string   `json:",omitempty"`
+	Notes        []string `json:",omitempty"`
+	Tags         []string `json:",omitempty"`
+	Source       Source   `json:",omitempty"`
 }
