@@ -2,6 +2,7 @@ package app
 
 import (
 	"gitlab.com/mryachanin/satisfied-vegan/api/recipe"
+	"gitlab.com/mryachanin/satisfied-vegan/config"
 	appTemplate "gitlab.com/mryachanin/satisfied-vegan/web/template"
 	"gopkg.in/yaml.v2"
 	"html/template"
@@ -9,11 +10,13 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strconv"
 )
 
-func HandleRequests() {
+func HandleRequests(c *config.Config) {
 	http.HandleFunc("/", handleRequest)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	url := c.Host + ":" + strconv.Itoa(c.Port)
+	log.Fatal(http.ListenAndServe(url, nil))
 }
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {

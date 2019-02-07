@@ -1,13 +1,15 @@
 package main
 
 import (
+  "gitlab.com/mryachanin/satisfied-vegan/config"
   "gitlab.com/mryachanin/satisfied-vegan/web/app"
 )
 
-func main() {
-  app.HandleRequests()
-}
+const (
+  configPath = "./config.json"
+)
 
-func init() {
-	// init db
+func main() {
+  c := config.LoadConfiguration(configPath)
+  app.HandleRequests(c)
 }
