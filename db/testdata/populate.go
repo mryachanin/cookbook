@@ -7,6 +7,7 @@ import (
   "gitlab.com/mryachanin/satisfied-vegan/api/recipe"
   "gitlab.com/mryachanin/satisfied-vegan/config"
   "gitlab.com/mryachanin/satisfied-vegan/db"
+  "github.com/google/uuid"
   "github.com/rhinoman/couchdb-go"
   "flag"
   "gopkg.in/yaml.v2"
@@ -67,7 +68,7 @@ func getRecipes(path string) ([]recipe.Recipe) {
 func storeRecipes(db *couchdb.Database, recipes []recipe.Recipe) {
   for _, v := range recipes {
     // Third argument is the revision. It is supposed to be blank on save.
-    rev, err := db.Save(v, v.Name, "")
+    rev, err := db.Save(v, uuid.New().String(), "")
     if err != nil {
       // This command is idempotent. Don't fail if the recipe already exists.
       if err.(*couchdb.Error).StatusCode == 409 {
