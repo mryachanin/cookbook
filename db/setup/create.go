@@ -8,6 +8,16 @@ import (
   "log"
 )
 
+type DesignDocument struct {
+  Language string          `json:"language"`
+  Views    map[string]View `json:"views"`
+}
+
+type View struct {
+  Map    string `json:"map"`
+  Reduce string `json:"reduce,omitempty"`
+}
+
 func main() {
   c := config.LoadConfiguration()
   conn := db.EstablishConnection(c)
@@ -17,15 +27,35 @@ func main() {
   createDatabase(conn, auth)
 
   // Connect to the database.
-  conn.SelectDB(db.DatabaseName, auth)
+  d := conn.SelectDB(db.DatabaseName, auth)
   log.Printf("Connected to database \"%s\"", db.DatabaseName)
 
-  // TODO: Set up database views.
+  // Set up views.
+  createViews(d)
 }
 
 // Creates the Satisfied Vegan database.
 func createDatabase(conn *couchdb.Connection, auth *couchdb.BasicAuth) {
   if err := conn.CreateDB(db.DatabaseName, auth); err != nil {
     log.Fatalf("Could not create database. Error: %s", err)
+  }
+}
+
+func createViews(d *couchdb.Database) {
+  // Map from view name -> view
+  var recipeViews = map[string]View{
+    "getRecipes": {
+      Map: `
+        function(doc) {
+          emit(doc.name, doc._id);
+        }`,
+    },
+  }
+  ddoc := DesignDocument{
+    Language: "javascript",
+    Views:    recipeViews,
+  }
+  if _, err := d.SaveDesignDoc("recipe", ddoc, ""); err != nil {
+    log.Fatalf("Could not create view. Error: %s", err)
   }
 }

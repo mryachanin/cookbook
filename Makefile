@@ -3,7 +3,7 @@ GOCMD=go
 install: clean
 	go-bindata \
 		-pkg template \
-		-o web/template/index.go \
+		-o web/template/assets.go \
 		web/template/...
 	$(GOCMD) install
 
