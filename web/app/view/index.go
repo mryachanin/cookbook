@@ -1,7 +1,7 @@
 package view
 
 import (
-  appTemplate "gitlab.com/mryachanin/satisfied-vegan/web/template"
+  appTemplate "github.com/mryachanin/cookbook/web/template"
   "github.com/rhinoman/couchdb-go"
   "html/template"
   "net/http"

@@ -10,7 +10,7 @@ install: clean
 clean:
 	$(GOCMD) clean
 	rm -f web/template/*.go
-	rm -f bin/satisfied-vegan
+	rm -f bin/cookbook
 
 test:
 	$(GOCMD) test

@@ -1,14 +1,14 @@
 package db
 
 import (
-  "gitlab.com/mryachanin/satisfied-vegan/config"
+  "github.com/mryachanin/cookbook/config"
   "github.com/rhinoman/couchdb-go"
   "log"
 )
 
 const (
   // Uppercase characters are not allowed.
-  DatabaseName = "satisfied_vegan"
+  DatabaseName = "cookbook"
 )
 
 func Connect(c *config.Config) (*couchdb.Database) {

@@ -1,9 +1,9 @@
 package main
 
 import (
-  "gitlab.com/mryachanin/satisfied-vegan/config"
-  "gitlab.com/mryachanin/satisfied-vegan/db"
-  "gitlab.com/mryachanin/satisfied-vegan/web/app"
+  "github.com/mryachanin/cookbook/config"
+  "github.com/mryachanin/cookbook/db"
+  "github.com/mryachanin/cookbook/web/app"
 )
 
 func main() {

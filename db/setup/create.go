@@ -2,8 +2,8 @@
 package main
 
 import (
-  "gitlab.com/mryachanin/satisfied-vegan/config"
-  "gitlab.com/mryachanin/satisfied-vegan/db"
+  "github.com/mryachanin/cookbook/config"
+  "github.com/mryachanin/cookbook/db"
   "github.com/rhinoman/couchdb-go"
   "log"
 )

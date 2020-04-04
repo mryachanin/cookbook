@@ -4,9 +4,9 @@
 package main
 
 import (
-  "gitlab.com/mryachanin/satisfied-vegan/api/recipe"
-  "gitlab.com/mryachanin/satisfied-vegan/config"
-  "gitlab.com/mryachanin/satisfied-vegan/db"
+  "github.com/mryachanin/cookbook/api/recipe"
+  "github.com/mryachanin/cookbook/config"
+  "github.com/mryachanin/cookbook/db"
   "github.com/google/uuid"
   "github.com/rhinoman/couchdb-go"
   "flag"

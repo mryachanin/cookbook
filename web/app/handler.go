@@ -1,8 +1,8 @@
 package app
 
 import (
-  "gitlab.com/mryachanin/satisfied-vegan/config"
-  "gitlab.com/mryachanin/satisfied-vegan/web/app/view"
+  "github.com/mryachanin/cookbook/config"
+  "github.com/mryachanin/cookbook/web/app/view"
   "github.com/rhinoman/couchdb-go"
   "log"
   "net/http"
