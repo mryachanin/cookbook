@@ -12,3 +12,9 @@ services:
     volumes:
       - ./app/etc/local.d/:/opt/couchdb/etc/local.d/
     restart: unless-stopped
+  cookbook-app:
+    depends_on:
+      - cookbook-couchdb
+    image: ghcr.io/mryachanin/cookbook-app:latest
+    ports:
+      - 0.0.0.0:8080:8080
