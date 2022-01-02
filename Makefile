@@ -1,12 +1,17 @@
 GOCMD=go
 GOGET=${GOCMD} get
 
-install: clean
+build: pack
+	${GOCMD} build
+
+install: pack
+	${GOCMD} install
+
+pack: clean
 	go-bindata \
 		-pkg template \
 		-o web/template/assets.go \
 		web/template/...
-	${GOCMD} install
 
 clean:
 	${GOCMD} clean
