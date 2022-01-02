@@ -1,2 +1,3 @@
 web/template/*.go
 config.json
+app/

@@ -1,0 +1,14 @@
+---
+version: "3.8"
+services:
+  cookbook-couchdb:
+    image: couchdb:latest
+    container_name: cookbook-couchdb
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    ports:
+      - 5984:5984
+    volumes:
+      - ./app/etc/local.d/:/opt/couchdb/etc/local.d/
+    restart: unless-stopped
