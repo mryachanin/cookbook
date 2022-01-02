@@ -1,15 +1,20 @@
 FROM golang:latest
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /go/src/github.com/mryachanin/cookbook
 
 # Bundle app source
 COPY ./ ./
 
 # Install the app
+RUN go install github.com/go-bindata/go-bindata/go-bindata@latest
 RUN make deps
 RUN make build
 
+RUN mkdir -p /usr/src/app/
+RUN mv ./cookbook /usr/src/app/
+WORKDIR /usr/src/app/
+
 # Run the app
 EXPOSE 8080
-CMD [ "cookbook" ]
+CMD [ "./cookbook" ]
