@@ -1,0 +1,15 @@
+FROM golang:latest
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Bundle app source
+COPY ./ ./
+
+# Install the app
+RUN make deps
+RUN make build
+
+# Run the app
+EXPOSE 8080
+CMD [ "cookbook" ]
