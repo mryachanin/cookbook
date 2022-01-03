@@ -4,6 +4,7 @@ services:
   cookbook-couchdb:
     image: couchdb:latest
     container_name: cookbook-couchdb
+    hostname: cookbook-couchdb
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
