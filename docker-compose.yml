@@ -10,7 +10,8 @@ services:
     ports:
       - 5984:5984
     volumes:
-      - ./app/etc/local.d/:/opt/couchdb/etc/local.d/
+      - ./mnt/etc/local.d/:/opt/couchdb/etc/local.d/
+      - ./mnt/data:/opt/couchdb/data
     restart: unless-stopped
   cookbook-app:
     depends_on:
