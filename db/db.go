@@ -17,7 +17,7 @@ func Connect(c *config.Config) (*couchdb.Database) {
 
   db := conn.SelectDB(DatabaseName, auth)
   if err := db.DbExists(); err != nil {
-    log.Fatalf("Failed to connect to database \"%s\"", DatabaseName)
+    log.Fatalf("Failed to connect to database \"%s\". Error: %s", DatabaseName, err)
   }
   log.Printf("Connected to database \"%s\"", DatabaseName)
 
