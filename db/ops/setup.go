@@ -1,4 +1,4 @@
-// Creates the CouchDB database and its views.
+// Creates the required CouchDB databases and their views.
 package ops
 
 import (
@@ -7,6 +7,8 @@ import (
   "github.com/rhinoman/couchdb-go"
   "log"
 )
+
+var requiredCouchDbDatabases = [3]string{ "_users", "_replicator", "_global_changes" }
 
 type DesignDocument struct {
   Language string          `json:"language"`
@@ -18,10 +20,8 @@ type View struct {
   Reduce string `json:"reduce,omitempty"`
 }
 
-var requiredCouchDbDatabases = [3]string{ "_users", "_replicator", "_global_changes" }
-
 func SetupDatabase() {
-  c := config.LoadConfiguration("../../config.json")
+  c := config.LoadConfiguration(configPath)
   conn := db.EstablishConnection(c)
   auth := db.CreateAuth(c)
 

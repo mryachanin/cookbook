@@ -1,9 +1,7 @@
 // This contains logic to populate CouchDB with initial data for testing
 // purposes until an API is implemented for creating recipes.
 // This command is idempotent.
-//
-// TODO: wire this into the db command
-package main
+package ops
 
 import (
   "github.com/mryachanin/cookbook/api/recipe"
@@ -11,29 +9,21 @@ import (
   "github.com/mryachanin/cookbook/db"
   "github.com/google/uuid"
   "github.com/rhinoman/couchdb-go"
-  "flag"
   "gopkg.in/yaml.v2"
   "io/ioutil"
   "log"
   "path/filepath"
 )
 
-var recipesPath string
-
-func init() {
-  flag.StringVar(&recipesPath, "p", "", "A path to a directory containing recipes in YAML to load into CouchDB")
-}
-
-func main() {
-  flag.Parse()
-  recipesPath = recipesPath + "/*.yaml"
+func ImportRecipes(path string) {
+  recipesPath := path + "/*.yaml"
 
   recipes := getRecipes(recipesPath)
   if len(recipes) == 0 {
     log.Fatalf("Found no YAML recipe files at path: \"%s\"", recipesPath)
   }
 
-  c := config.LoadConfiguration()
+  c := config.LoadConfiguration(configPath)
   db := db.Connect(c)
   storeRecipes(db, recipes)
 }
