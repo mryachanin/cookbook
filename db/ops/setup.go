@@ -54,6 +54,8 @@ func createDatabases(conn *couchdb.Connection, auth *couchdb.BasicAuth) {
 }
 
 func createDatabase(dbName string, conn *couchdb.Connection, auth *couchdb.BasicAuth) {
+  log.Printf("Creating database: %s", dbName)
+
   if err := conn.CreateDB(dbName, auth); err != nil {
     log.Fatalf("Could not create database: %s. Error: %s", dbName, err)
   }
@@ -69,10 +71,14 @@ func createViews(d *couchdb.Database) {
         }`,
     },
   }
+
   ddoc := DesignDocument{
     Language: "javascript",
     Views:    recipeViews,
   }
+
+  log.Printf("Creating views: %s", recipeViews)
+
   if _, err := d.SaveDesignDoc("recipe", ddoc, ""); err != nil {
     log.Fatalf("Could not create view. Error: %s", err)
   }
