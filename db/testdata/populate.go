@@ -1,6 +1,8 @@
 // This contains logic to populate CouchDB with initial data for testing
 // purposes until an API is implemented for creating recipes.
 // This command is idempotent.
+//
+// TODO: wire this into the db command
 package main
 
 import (

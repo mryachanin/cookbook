@@ -6,8 +6,12 @@ import (
   "github.com/mryachanin/cookbook/web/app"
 )
 
+const (
+  configPath = "./config.json"
+)
+
 func main() {
-  c := config.LoadConfiguration()
+  c := config.LoadConfiguration(configPath)
   db := db.Connect(c)
   app.HandleRequests(c, db)
 }

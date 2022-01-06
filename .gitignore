@@ -1,3 +1,4 @@
-web/template/*.go
+cmd/db/db
 config.json
 mnt/
+web/template/*.go

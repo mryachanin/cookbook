@@ -1,5 +1,5 @@
 // Creates the CouchDB database and its views.
-package main
+package ops
 
 import (
   "github.com/mryachanin/cookbook/config"
@@ -18,26 +18,44 @@ type View struct {
   Reduce string `json:"reduce,omitempty"`
 }
 
-func main() {
-  c := config.LoadConfiguration()
+var requiredCouchDbDatabases = [3]string{ "_users", "_replicator", "_global_changes" }
+
+func SetupDatabase() {
+  c := config.LoadConfiguration("../../config.json")
   conn := db.EstablishConnection(c)
   auth := db.CreateAuth(c)
 
-  // Create the database.
-  createDatabase(conn, auth)
+  // Do nothing if database exists.
+  d := conn.SelectDB(db.DatabaseName, auth)
+  if err := d.DbExists(); err == nil {
+    log.Printf("Database already exists: %s. Exiting", db.DatabaseName)
+    return
+  }
+
+  // Create required databases.
+  createDatabases(conn, auth)
 
   // Connect to the database.
-  d := conn.SelectDB(db.DatabaseName, auth)
+  d = conn.SelectDB(db.DatabaseName, auth)
   log.Printf("Connected to database \"%s\"", db.DatabaseName)
 
   // Set up views.
   createViews(d)
 }
 
-// Create the database.
-func createDatabase(conn *couchdb.Connection, auth *couchdb.BasicAuth) {
-  if err := conn.CreateDB(db.DatabaseName, auth); err != nil {
-    log.Fatalf("Could not create database. Error: %s", err)
+func createDatabases(conn *couchdb.Connection, auth *couchdb.BasicAuth) {
+  // Create the dbs required by CouchDB.
+  for _, dbName := range requiredCouchDbDatabases {
+    createDatabase(dbName, conn, auth)
+  }
+
+  // Create the main app db.
+  createDatabase(db.DatabaseName, conn, auth)
+}
+
+func createDatabase(dbName string, conn *couchdb.Connection, auth *couchdb.BasicAuth) {
+  if err := conn.CreateDB(dbName, auth); err != nil {
+    log.Fatalf("Could not create database: %s. Error: %s", dbName, err)
   }
 }
 

@@ -6,10 +6,6 @@ import (
   "os"
 )
 
-const (
-  configPath = "./config.json"
-)
-
 type Config struct {
   Host string       `json:"host"`
   Port int          `json:"port"`
@@ -21,9 +17,12 @@ type Config struct {
   }                 `json:"database"`
 }
 
-func LoadConfiguration() *Config {
+func LoadConfiguration(path string) *Config {
   var config *Config
-  configFile, err := os.Open(configPath)
+
+  log.Printf("Looking for config in path: %s", path)
+
+  configFile, err := os.Open(path)
   defer configFile.Close()
   if err != nil {
     log.Fatal(err.Error())
