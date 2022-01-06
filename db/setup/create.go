@@ -1,4 +1,4 @@
-// Creates the Satisfied Vegan CouchDB database and its views.
+// Creates the CouchDB database and its views.
 package main
 
 import (
@@ -34,7 +34,7 @@ func main() {
   createViews(d)
 }
 
-// Creates the Satisfied Vegan database.
+// Create the database.
 func createDatabase(conn *couchdb.Connection, auth *couchdb.BasicAuth) {
   if err := conn.CreateDB(db.DatabaseName, auth); err != nil {
     log.Fatalf("Could not create database. Error: %s", err)
