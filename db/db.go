@@ -11,7 +11,7 @@ import (
 const (
   // Uppercase characters are not allowed.
   DatabaseName = "cookbook"
-  retries = 3
+  retries = 5
   setupDbIfNotExists = true
 )
 
@@ -36,14 +36,18 @@ func connectWithRetry(c *config.Config, conn *couchdb.Connection, auth *couchdb.
       time.Sleep(time.Duration(backoff) * time.Millisecond)
     }
 
+    err := conn.Ping()
+    if err != nil {
+      log.Printf("Failed to connect to database \"%s\". It may not be booted yet. Error: %s", DatabaseName, err)
+      continue
+    }
+
     db := conn.SelectDB(DatabaseName, auth)
 
-    err := db.DbExists()
+    err = db.DbExists()
     if err == nil {
       return db
     }
-
-    log.Printf("Failed to connect to database \"%s\". Error: %s", DatabaseName, err)
 
     if setupDbIfNotExists {
       SetupDatabase(c, conn, auth)
