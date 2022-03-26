@@ -22,20 +22,18 @@ type viewResultItem struct {
 func GetIndex(w http.ResponseWriter, r *http.Request, db *couchdb.Database) {
   result := viewResult{}
   if err := db.GetView("recipe", "getRecipes", &result, nil); err != nil {
-    errorAndReturn(err, w)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
   }
 
   templateArr := appTemplate.MustAsset("web/template/index.html")
   t, err := template.New("index.html").Parse(string(templateArr[:]))
   if err != nil {
-    errorAndReturn(err, w)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
   }
   if err := t.Execute(w, result.Rows); err != nil {
-    errorAndReturn(err, w)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
   }
-}
-
-func errorAndReturn(err error, w http.ResponseWriter) {
-  http.Error(w, err.Error(), http.StatusInternalServerError)
-  return
 }
