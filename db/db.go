@@ -31,7 +31,7 @@ func connectWithRetry(c *config.Config, conn *couchdb.Connection, auth *couchdb.
     if i > 0 {
       backoff := i * 5 * int(math.Pow(10, float64(i-1)))
 
-      log.Printf("Retrying connection in %d ms")
+      log.Printf("Retrying connection in %d ms", backoff)
 
       time.Sleep(time.Duration(backoff) * time.Millisecond)
     }
@@ -54,6 +54,6 @@ func connectWithRetry(c *config.Config, conn *couchdb.Connection, auth *couchdb.
     }
   }
 
-  log.Fatal("Reached max number of failures while connecting to database. Exiting.")
+  panic("Reached max number of failures while connecting to database. Exiting.")
   return nil
 }
