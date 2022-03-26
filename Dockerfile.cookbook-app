@@ -11,15 +11,9 @@ RUN go install github.com/go-bindata/go-bindata/go-bindata@latest
 RUN make deps
 RUN make build
 
-WORKDIR $WORKDIR/cmd/db
-RUN go install
-
 RUN mkdir -p /usr/src/app/
 RUN mv ./cookbook /usr/src/app/
 WORKDIR /usr/src/app/
-
-# Create resources if necessary
-RUN db -o setup
 
 # Run the app
 EXPOSE 8080
