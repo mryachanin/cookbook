@@ -1,4 +1,4 @@
 cmd/db/db
-config.json
+config_json
 mnt/
 web/template/*.go
