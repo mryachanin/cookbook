@@ -4,7 +4,6 @@ package ops
 import (
 	"github.com/mryachanin/cookbook/config"
 	"github.com/mryachanin/cookbook/db"
-	"github.com/rhinoman/couchdb-go"
   )
 
 func SetupDatabase() {
