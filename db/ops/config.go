@@ -2,5 +2,5 @@
 package ops
 
 const (
-  configPath = "../../config.json"
+  configPath = "../../config_json"
 )
