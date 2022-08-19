@@ -1,0 +1,23 @@
+name: Minced Onions
+ingredients:
+- quantity: 10 (large)
+  name: Onion
+  prep: Minced
+  note: Sorry
+instructions:
+- Cut onions
+- Cry tears of joy
+yields: 10 cups
+keeps_for: 4 days
+prep_time: 20 minutes
+total_time: 20 minutes
+notes:
+- Be as precise as possible. Every cell counts.
+- Obtain fresh by hunting Ogres for the best possible result.
+tags:
+- gullible
+- life-lessons
+source:
+  name: Onions are life
+  type: website
+  link: https://en.wikipedia.org/wiki/Onion
