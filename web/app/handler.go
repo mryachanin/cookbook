@@ -3,6 +3,7 @@ package app
 import (
   "github.com/mryachanin/cookbook/config"
   "github.com/mryachanin/cookbook/web/app/view"
+  "github.com/julienschmidt/httprouter"
   "github.com/rhinoman/couchdb-go"
   "log"
   "net/http"
@@ -10,15 +11,18 @@ import (
 )
 
 func HandleRequests(c *config.Config, db *couchdb.Database) {
-  http.HandleFunc("/", wrap(view.GetIndex, db))
-  http.HandleFunc("/recipe", wrap(view.GetRecipe, db))
+  router := httprouter.New()
+
+  router.GET("/", wrap(view.GetIndex, db))
+  router.GET("/recipe/:id", wrap(view.GetRecipe, db))
+
   url := c.Host + ":" + strconv.Itoa(c.Port)
-  log.Fatal(http.ListenAndServe(url, nil))
+  log.Fatal(http.ListenAndServe(url, router))
 }
 
-func wrap(handler func(http.ResponseWriter, *http.Request, *couchdb.Database),
-          db *couchdb.Database) (func(w http.ResponseWriter, r *http.Request)) {
-  return func(w http.ResponseWriter, r *http.Request) {
-    handler(w, r, db)
+func wrap(handler func(http.ResponseWriter, *http.Request, httprouter.Params, *couchdb.Database),
+          db *couchdb.Database) (func(w http.ResponseWriter, r *http.Request, ps httprouter.Params)) {
+  return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    handler(w, r, ps, db)
   }
 }

@@ -2,6 +2,7 @@ package view
 
 import (
   appTemplate "github.com/mryachanin/cookbook/web/template"
+  "github.com/julienschmidt/httprouter"
   "github.com/rhinoman/couchdb-go"
   "html/template"
   "net/http"
@@ -19,7 +20,7 @@ type viewResultItem struct {
   Value string `json:"value"`
 }
 
-func GetIndex(w http.ResponseWriter, r *http.Request, db *couchdb.Database) {
+func GetIndex(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *couchdb.Database) {
   result := viewResult{}
   if err := db.GetView("recipe", "getRecipes", &result, nil); err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)

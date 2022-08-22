@@ -3,7 +3,7 @@
     <h2>Recipes:</h2>
     <ul>
       {{range .}}
-      <li><a href="/recipe?id={{.Value}}">{{.Key}}</a></li>
+      <li><a href="/recipe/{{.Value}}">{{.Key}}</a></li>
       {{end}}
     </ul>
   </body>
