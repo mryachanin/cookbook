@@ -14,6 +14,8 @@ func HandleRequests(c *config.Config, db *couchdb.Database) {
   router := httprouter.New()
 
   router.GET("/", wrap(view.GetIndex, db))
+  router.GET("/recipe", wrap(view.CreateRecipe, db))
+  router.POST("/recipe", wrap(view.PostRecipe, db))
   router.GET("/recipe/:id", wrap(view.GetRecipe, db))
 
   url := c.Host + ":" + strconv.Itoa(c.Port)

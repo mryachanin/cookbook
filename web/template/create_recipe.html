@@ -1,0 +1,69 @@
+<body>
+{{if .Success}}
+    <h1>Thanks for your recipe!</h1>
+{{else}}
+<form method="POST">
+    <label for="r_name">Recipe name:</label><br>
+    <input type="text" id="r_name" name="r_name"><br>
+
+    <fieldset>
+        <legend>Ingredients:</legend>
+        <label for="i_quantity">Quantity:</label>
+        <input type="text" id="i_quantity" name="i_quantity">
+        <label for="i_name">Quantity:</label>
+        <input type="text" id="i_name" name="i_name">
+        <label for="i_prep">Prep:</label>
+        <input type="text" id="i_prep" name="i_prep">
+        <label for="i_note">Note:</label>
+        <input type="text" id="i_note" name="i_note"><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Instructions:</legend>
+        <label for="step">Step:</label>
+        <input type="text" id="step" name="step"><br>
+    </fieldset>
+
+    <label for="yields">Yields:</label><br>
+    <input type="text" id="yields" name="yields"><br>
+
+    <label for="keeps_for">Keeps for:</label><br>
+    <input type="text" id="keeps_for" name="keeps_for"><br>
+
+    <label for="prep_time">Prep time:</label><br>
+    <input type="text" id="prep_time" name="prep_time"><br>
+
+    <label for="total_time">Total time:</label><br>
+    <input type="text" id="total_time" name="total_time"><br>
+
+    <fieldset>
+        <legend>Notes:</legend>
+        <label for="note">Note:</label>
+        <input type="text" id="note" name="note"><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Tags:</legend>
+        <label for="tag">Tag:</label>
+        <input type="text" id="tag" name="tag"><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Source:</legend>
+        <label for="s_name">Name:</label>
+        <input type="text" id="s_name" name="s_name"><br>
+
+        <label for="s_type">Type:</label><br>
+        <input type="radio" id="s_type_book" name="s_type">
+        <label for="s_type_book">Book</label><br>
+        <input type="radio" id="s_type_website" name="s_type">
+        <label for="s_type_website">Website</label><br>
+
+        <label for="s_link">Link:</label>
+        <input type="url" id="s_link" name="s_link"><br>
+    </fieldset>
+
+    <input type="submit">
+</form>
+{{end}}
+</body>
