@@ -1,6 +1,8 @@
 cmd/db/db
 config_json
-config.json
+config_local.json
 mnt/
 web/template/*.go
 cookbook
+cookbook-db
+.env
