@@ -37,21 +37,25 @@
                     <legend>🥘 Ingredients</legend>
                     <div id="ingredients-container">
                         <div class="ingredient-group">
-                            <div class="form-group">
-                                <label for="i_quantity_1">Quantity:</label>
-                                <input type="text" id="i_quantity_1" name="i_quantity[]" placeholder="e.g., 2 cups">
+                            <div class="ingredient-row-1">
+                                <div class="ingredient-field">
+                                    <label for="i_quantity_1">Quantity:</label>
+                                    <input type="text" id="i_quantity_1" name="i_quantity[]" placeholder="2 cups">
+                                </div>
+                                <div class="ingredient-field">
+                                    <label for="i_name_1">Ingredient:</label>
+                                    <input type="text" id="i_name_1" name="i_name[]" placeholder="flour">
+                                </div>
+                                <div class="ingredient-field">
+                                    <label for="i_prep_1">Preparation:</label>
+                                    <input type="text" id="i_prep_1" name="i_prep[]" placeholder="chopped">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="i_name_1">Ingredient Name:</label>
-                                <input type="text" id="i_name_1" name="i_name[]" placeholder="e.g., flour">
-                            </div>
-                            <div class="form-group">
-                                <label for="i_prep_1">Preparation:</label>
-                                <input type="text" id="i_prep_1" name="i_prep[]" placeholder="e.g., chopped, diced">
-                            </div>
-                            <div class="form-group">
-                                <label for="i_note_1">Note:</label>
-                                <input type="text" id="i_note_1" name="i_note[]" placeholder="Any special notes">
+                            <div class="ingredient-row-2">
+                                <div class="ingredient-field-full">
+                                    <label for="i_note_1">Note:</label>
+                                    <input type="text" id="i_note_1" name="i_note[]" placeholder="Any special notes">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -156,23 +160,27 @@
             const newIngredient = document.createElement('div');
             newIngredient.className = 'ingredient-group';
             newIngredient.innerHTML = `
-                <div class="form-group">
-                    <label for="i_quantity_${ingredientCount}">Quantity:</label>
-                    <input type="text" id="i_quantity_${ingredientCount}" name="i_quantity[]" placeholder="e.g., 2 cups">
+                <div class="ingredient-row-1">
+                    <div class="ingredient-field">
+                        <label for="i_quantity_${ingredientCount}">Quantity:</label>
+                        <input type="text" id="i_quantity_${ingredientCount}" name="i_quantity[]" placeholder="2 cups">
+                    </div>
+                    <div class="ingredient-field">
+                        <label for="i_name_${ingredientCount}">Ingredient:</label>
+                        <input type="text" id="i_name_${ingredientCount}" name="i_name[]" placeholder="flour">
+                    </div>
+                    <div class="ingredient-field">
+                        <label for="i_prep_${ingredientCount}">Preparation:</label>
+                        <input type="text" id="i_prep_${ingredientCount}" name="i_prep[]" placeholder="chopped">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="i_name_${ingredientCount}">Ingredient Name:</label>
-                    <input type="text" id="i_name_${ingredientCount}" name="i_name[]" placeholder="e.g., flour">
+                <div class="ingredient-row-2">
+                    <div class="ingredient-field-full">
+                        <label for="i_note_${ingredientCount}">Note:</label>
+                        <input type="text" id="i_note_${ingredientCount}" name="i_note[]" placeholder="Any special notes">
+                    </div>
+                    <button type="button" class="remove-btn" onclick="removeIngredient(this)">× Remove</button>
                 </div>
-                <div class="form-group">
-                    <label for="i_prep_${ingredientCount}">Preparation:</label>
-                    <input type="text" id="i_prep_${ingredientCount}" name="i_prep[]" placeholder="e.g., chopped, diced">
-                </div>
-                <div class="form-group">
-                    <label for="i_note_${ingredientCount}">Note:</label>
-                    <input type="text" id="i_note_${ingredientCount}" name="i_note[]" placeholder="Any special notes">
-                </div>
-                <button type="button" class="remove-btn" onclick="removeIngredient(this)">× Remove</button>
             `;
             container.appendChild(newIngredient);
         }
