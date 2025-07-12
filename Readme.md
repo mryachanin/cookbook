@@ -1,10 +1,49 @@
-## CouchDB
-### Web UI
-Navigate to: http://127.0.0.1:5984/_utils/
+# Cookbook Deployment Guide
 
-### Command Line
-#### List all Databases
-Execute: curl -X GET http://127.0.0.1:5984/_all_dbs
+## Local Development
 
-#### Delete Database
-Execute: curl -X DELETE http://127.0.0.1:5984/cookbook
+For local development with locally built images:
+
+```bash
+# Build and start with local image (default behavior)
+docker-compose up --build
+
+# Or just start if already built
+docker-compose up
+```
+
+This uses `docker-compose.override.yml` automatically to build the image locally.
+
+## Production Deployment
+
+For production using GitHub Container Registry:
+
+```bash
+# Using production override file
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# Or set environment variable
+export COOKBOOK_IMAGE=ghcr.io/mryachanin/cookbook-app:latest
+docker-compose up -d
+```
+
+## Environment Variables
+
+- `COOKBOOK_IMAGE`: Docker image to use (defaults to GitHub registry)
+- `COUCHDB_USER`: CouchDB username (defaults to "admin")
+- `COUCHDB_PASSWORD`: CouchDB password (defaults to "admin")
+
+## Database Setup
+
+After starting the containers, set up the database:
+
+```bash
+# Build database tools
+go build -o cookbook-db ./cmd/db
+
+# Set up database
+./cookbook-db -o setup
+
+# Import sample data (optional)
+./cookbook-db -o import -i ./testdata
+```
