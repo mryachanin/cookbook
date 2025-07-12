@@ -782,12 +782,13 @@ textarea::placeholder {
     text-decoration: none;
     font-weight: 600;
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: var(--radius-sm);
     display: inline-block;
     margin-top: var(--spacing-md);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .success-message a:hover {
