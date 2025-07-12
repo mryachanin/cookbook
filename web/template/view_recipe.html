@@ -16,6 +16,7 @@
         <a href="/">Home</a>
         <a href="/create">Add Recipe</a>
         <button id="editToggle" class="edit-btn">✏️ Edit Recipe</button>
+        <button id="deleteBtn" class="delete-btn">🗑️ Delete Recipe</button>
     </nav>
 
     <main class="recipe-detail">
@@ -173,7 +174,25 @@
             <button id="saveBtn" class="save-btn">💾 Save Changes</button>
             <button id="cancelBtn" class="cancel-btn">❌ Cancel</button>
         </div>
+
     </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🗑️ Delete Recipe</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<strong id="deleteRecipeName">{{.Name}}</strong>"?</p>
+                <p class="warning-text">⚠️ This action cannot be undone!</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmDeleteBtn" class="confirm-delete-btn">🗑️ Yes, Delete</button>
+                <button id="cancelDeleteBtn" class="cancel-delete-btn">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         let isEditMode = false;
@@ -184,6 +203,16 @@
         const saveBtn = document.getElementById('saveBtn');
         const cancelBtn = document.getElementById('cancelBtn');
         const successMessage = document.getElementById('successMessage');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const deleteModal = document.getElementById('deleteModal');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+        // Debug element detection
+        console.log('Delete button found:', !!deleteBtn);
+        console.log('Delete modal found:', !!deleteModal);
+        console.log('Confirm delete button found:', !!confirmDeleteBtn);
+        console.log('Cancel delete button found:', !!cancelDeleteBtn);
 
         // Store original data
         function storeOriginalData() {
@@ -225,6 +254,40 @@
 
         saveBtn.addEventListener('click', saveChanges);
         cancelBtn.addEventListener('click', cancelEdit);
+        
+        // Delete button event listeners
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Delete button clicked');
+                showDeleteModal();
+            });
+        }
+        
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Confirm delete button clicked');
+                deleteRecipe();
+            });
+        }
+        
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Cancel delete button clicked');
+                hideDeleteModal();
+            });
+        }
+
+        // Close modal when clicking outside
+        if (deleteModal) {
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) {
+                    hideDeleteModal();
+                }
+            });
+        }
 
         function enterEditMode() {
             isEditMode = true;
@@ -414,6 +477,63 @@
                 }
             }
         });
+
+        // Delete functionality
+        function showDeleteModal() {
+            console.log('showDeleteModal called');
+            if (deleteModal) {
+                deleteModal.style.display = 'flex';
+                deleteModal.style.position = 'fixed';
+                deleteModal.style.top = '0';
+                deleteModal.style.left = '0';
+                deleteModal.style.width = '100vw';
+                deleteModal.style.height = '100vh';
+                deleteModal.style.zIndex = '9999';
+                deleteModal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                console.log('Delete modal shown with forced styles');
+                console.log('Modal computed styles:', getComputedStyle(deleteModal));
+            } else {
+                console.error('Delete modal element not found');
+            }
+        }
+
+        function hideDeleteModal() {
+            deleteModal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        async function deleteRecipe() {
+            try {
+                console.log('Attempting to delete recipe at:', window.location.pathname);
+                
+                // Use POST with form data to signal delete action
+                const formData = new FormData();
+                formData.append('_method', 'DELETE');
+                
+                const response = await fetch(window.location.pathname + '/delete', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                console.log('Delete response status:', response.status);
+                
+                if (response.ok) {
+                    console.log('Recipe deleted successfully, redirecting to home');
+                    // Recipe deleted successfully, redirect to home
+                    window.location.href = '/';
+                } else {
+                    const errorText = await response.text();
+                    console.error('Delete failed:', errorText);
+                    alert('Error deleting recipe: ' + errorText);
+                    hideDeleteModal();
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting recipe: ' + error.message);
+                hideDeleteModal();
+            }
+        }
     </script>
 </body>
 </html>

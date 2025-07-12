@@ -260,6 +260,44 @@ func UpdateRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, 
   t.Execute(w, successData)
 }
 
+func DeleteRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *couchdb.Database) {
+  recipeId := ps.ByName("id")
+
+  if len(recipeId) == 0 {
+    err := errors.New("Recipe ID must be specified")
+    http.Error(w, err.Error(), http.StatusBadRequest)
+    return
+  }
+
+  // Log the delete attempt
+  println("Attempting to delete recipe:", recipeId)
+
+  // Get the recipe first to get the revision
+  recipe := recipe.Recipe{}
+  rev, err := db.Read(recipeId, &recipe, nil)
+  if err != nil {
+    println("Error reading recipe:", err.Error())
+    http.Error(w, err.Error(), http.StatusNotFound)
+    return
+  }
+
+  println("Found recipe, revision:", rev)
+
+  // Delete the recipe
+  _, err = db.Delete(recipeId, rev)
+  if err != nil {
+    println("Error deleting recipe:", err.Error())
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  println("Recipe deleted successfully")
+
+  // Return success response
+  w.WriteHeader(http.StatusOK)
+  w.Write([]byte("Recipe deleted successfully"))
+}
+
 func getValue(slice []string, index int) string {
   if index < len(slice) {
     return slice[index]

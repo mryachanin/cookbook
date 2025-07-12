@@ -24,6 +24,8 @@ func HandleRequests(c *config.Config, db *couchdb.Database) {
   router.POST("/create", wrap(view.PostRecipe, db))
   router.GET("/recipe/:id", wrap(view.GetRecipe, db))
   router.POST("/recipe/:id", wrap(view.UpdateRecipe, db))
+  router.DELETE("/recipe/:id", wrap(view.DeleteRecipe, db))
+  router.POST("/recipe/:id/delete", wrap(view.DeleteRecipe, db))
   router.GET("/edit/:id", wrap(view.EditRecipe, db))
   router.POST("/edit/:id", wrap(view.UpdateRecipe, db))
 
