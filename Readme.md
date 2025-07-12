@@ -14,6 +14,11 @@ docker-compose up
 
 This uses `docker-compose.override.yml` automatically to build the image locally.
 
+```bash
+# Here's a one-liner
+docker compose down && docker buildx build -t cookbook-app:latest -f Dockerfile.cookbook-app . && docker compose up -d
+```
+
 ## Production Deployment
 
 For production using GitHub Container Registry:
@@ -44,6 +49,12 @@ go build -o cookbook-db ./cmd/db
 # Set up database
 ./cookbook-db -o setup
 
-# Import sample data (optional)
+# Drop the database
+./cookbook-db -o drop
+
+# Import sample data
 ./cookbook-db -o import -i ./testdata
+
+# Export all data into a folder
+./cookbook-db -o export -e ./folder-to-export-into
 ```
