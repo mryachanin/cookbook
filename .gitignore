@@ -4,5 +4,5 @@ config_local.json
 mnt/
 web/template/*.go
 cookbook
-cookbook-db
+db-tool
 .env

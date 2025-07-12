@@ -20,12 +20,19 @@ type View struct {
 }
 
 func SetupDatabase(c *config.Config, conn *couchdb.Connection, auth *couchdb.BasicAuth) {
-  // Do nothing if database exists.
+  // Check if database exists
   d := conn.SelectDB(DatabaseName, auth)
-  if err := d.DbExists(); err == nil {
-    log.Printf("Database already exists: %s. Exiting", DatabaseName)
+  dbExists := d.DbExists() == nil
+  
+  if dbExists {
+    log.Printf("Database '%s' already exists, checking views...", DatabaseName)
+    // Database exists, but we should still check and create views if needed
+    createViews(d)
+    log.Printf("Database setup verification completed for '%s'", DatabaseName)
     return
   }
+
+  log.Printf("Database '%s' does not exist, creating...", DatabaseName)
 
   // Create required databases.
   createDatabases(conn, auth)
@@ -36,6 +43,7 @@ func SetupDatabase(c *config.Config, conn *couchdb.Connection, auth *couchdb.Bas
 
   // Set up views.
   createViews(d)
+  log.Printf("Database setup completed for '%s'", DatabaseName)
 }
 
 func createDatabases(conn *couchdb.Connection, auth *couchdb.BasicAuth) {
@@ -52,11 +60,32 @@ func createDatabase(dbName string, conn *couchdb.Connection, auth *couchdb.Basic
   log.Printf("Creating database: %s", dbName)
 
   if err := conn.CreateDB(dbName, auth); err != nil {
+    // Check if error is due to database already existing
+    if couchErr, ok := err.(*couchdb.Error); ok && couchErr.StatusCode == 412 {
+      log.Printf("Database '%s' already exists, skipping creation", dbName)
+      return
+    }
     log.Fatalf("Could not create database: %s. Error: %s", dbName, err)
+  } else {
+    log.Printf("Successfully created database: %s", dbName)
   }
 }
 
 func createViews(d *couchdb.Database) {
+  // Check if design document already exists
+  var existingDoc DesignDocument
+  _, err := d.Read("_design/recipe", &existingDoc, nil)
+  
+  if err == nil {
+    log.Printf("Design document 'recipe' already exists with views, skipping creation")
+    return
+  }
+
+  // If error is not "not found", it's a real error
+  if couchErr, ok := err.(*couchdb.Error); ok && couchErr.StatusCode != 404 {
+    log.Printf("Error checking existing design document: %s", err)
+  }
+
   // Map from view name -> view
   var recipeViews = map[string]View{
     "getRecipes": {
@@ -72,9 +101,16 @@ func createViews(d *couchdb.Database) {
     Views:    recipeViews,
   }
 
-  log.Printf("Creating views: %s", recipeViews)
+  log.Printf("Creating views for design document 'recipe'")
 
   if _, err := d.SaveDesignDoc("recipe", ddoc, ""); err != nil {
+    // Check if error is due to design document already existing (race condition)
+    if couchErr, ok := err.(*couchdb.Error); ok && couchErr.StatusCode == 409 {
+      log.Printf("Design document 'recipe' was created concurrently, this is normal")
+      return
+    }
     log.Fatalf("Could not create view. Error: %s", err)
+  } else {
+    log.Printf("Successfully created views for design document 'recipe'")
   }
 }
