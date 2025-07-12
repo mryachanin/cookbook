@@ -43,7 +43,10 @@
             <h3>🥘 Ingredients</h3>
             <ul class="ingredients-list">
                 {{range .Ingredients}}
-                <li>{{.Quantity}} {{.Name}}{{if .Prep}} ({{.Prep}}){{end}}</li>
+                <li>
+                    {{.Quantity}} {{.Name}}{{if .Prep}} ({{.Prep}}){{end}}
+                    {{if .Note}}<br><em>{{.Note}}</em>{{end}}
+                </li>
                 {{end}}
             </ul>
         </section>
