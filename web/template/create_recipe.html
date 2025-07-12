@@ -127,17 +127,17 @@
                         <label>Source Type:</label>
                         <div class="radio-group">
                             <div class="radio-item">
-                                <input type="radio" id="s_type_book" name="s_type" value="book">
+                                <input type="radio" id="s_type_book" name="s_type" value="book" onchange="toggleSourceLink()">
                                 <label for="s_type_book">Book</label>
                             </div>
                             <div class="radio-item">
-                                <input type="radio" id="s_type_website" name="s_type" value="website">
+                                <input type="radio" id="s_type_website" name="s_type" value="website" onchange="toggleSourceLink()">
                                 <label for="s_type_website">Website</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="source-link-group" style="display: none;">
                         <label for="s_link">Source Link:</label>
                         <input type="url" id="s_link" name="s_link" placeholder="https://example.com/recipe">
                     </div>
@@ -237,6 +237,21 @@
                 label.setAttribute('for', `step_${index + 1}`);
                 textarea.setAttribute('id', `step_${index + 1}`);
             });
+        }
+
+        function toggleSourceLink() {
+            const websiteRadio = document.getElementById('s_type_website');
+            const sourceLinkGroup = document.getElementById('source-link-group');
+            const sourceLinkInput = document.getElementById('s_link');
+            
+            if (websiteRadio.checked) {
+                sourceLinkGroup.style.display = 'block';
+                sourceLinkInput.required = true;
+            } else {
+                sourceLinkGroup.style.display = 'none';
+                sourceLinkInput.required = false;
+                sourceLinkInput.value = '';
+            }
         }
     </script>
 </body>
