@@ -9,8 +9,8 @@ import (
   "github.com/mryachanin/cookbook/db"
   "github.com/google/uuid"
   "github.com/rhinoman/couchdb-go"
-  "gopkg.in/yaml.v2"
-  "io/ioutil"
+  "gopkg.in/yaml.v3"
+  "os"
   "log"
   "path/filepath"
 )
@@ -40,7 +40,7 @@ func getRecipes(path string) ([]recipe.Recipe) {
   // For each recipe in the given path, read and unmarshal it.
   for _, path := range paths {
     // Read the recipe.
-    b, err := ioutil.ReadFile(path)
+    b, err := os.ReadFile(path)
     if err != nil {
       log.Fatal(err)
     }
