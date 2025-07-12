@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{.Name}} - Cookbook</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🍳 My Cookbook</h1>
+        <p>A delicious collection of recipes</p>
+    </header>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/create">Add Recipe</a>
+        <a href="/recipe/{{.Id}}">View Recipe</a>
+    </nav>
+
+    <main>
+        {{if .Success}}
+        <div class="success-message">
+            <h1>🎉 Recipe Updated!</h1>
+            <p>Your recipe has been successfully updated.</p>
+            <a href="/recipe/{{.Id}}" class="nav">← View Recipe</a>
+        </div>
+        {{else}}
+        <div class="form-container">
+            <h2>Edit Recipe</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="r_name">Recipe Name:</label>
+                    <input type="text" id="r_name" name="r_name" value="{{.Name}}" required>
+                </div>
+
+                <fieldset>
+                    <legend data-emoji="🥘"><span class="legend-text">Ingredients</span></legend>
+                    <div id="ingredients-container">
+                        {{range $index, $ingredient := .Ingredients}}
+                        <div class="ingredient-group">
+                            <div class="ingredient-row-1">
+                                <div class="ingredient-field">
+                                    <label for="i_quantity_{{add $index 1}}">Quantity:</label>
+                                    <input type="text" id="i_quantity_{{add $index 1}}" name="i_quantity[]" value="{{$ingredient.Quantity}}" placeholder="2 cups">
+                                </div>
+                                <div class="ingredient-field">
+                                    <label for="i_name_{{add $index 1}}">Ingredient:</label>
+                                    <input type="text" id="i_name_{{add $index 1}}" name="i_name[]" value="{{$ingredient.Name}}" placeholder="flour">
+                                </div>
+                                <div class="ingredient-field">
+                                    <label for="i_prep_{{add $index 1}}">Preparation:</label>
+                                    <input type="text" id="i_prep_{{add $index 1}}" name="i_prep[]" value="{{$ingredient.Prep}}" placeholder="chopped">
+                                </div>
+                            </div>
+                            <div class="ingredient-row-2">
+                                <div class="ingredient-field-full">
+                                    <label for="i_note_{{add $index 1}}">Note:</label>
+                                    <input type="text" id="i_note_{{add $index 1}}" name="i_note[]" value="{{$ingredient.Note}}" placeholder="Any special notes">
+                                </div>
+                                {{if ne $index 0}}
+                                <button type="button" class="remove-btn" onclick="removeIngredient(this)">× Remove</button>
+                                {{end}}
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="ingredient-group">
+                            <div class="ingredient-row-1">
+                                <div class="ingredient-field">
+                                    <label for="i_quantity_1">Quantity:</label>
+                                    <input type="text" id="i_quantity_1" name="i_quantity[]" placeholder="2 cups">
+                                </div>
+                                <div class="ingredient-field">
+                                    <label for="i_name_1">Ingredient:</label>
+                                    <input type="text" id="i_name_1" name="i_name[]" placeholder="flour">
+                                </div>
+                                <div class="ingredient-field">
+                                    <label for="i_prep_1">Preparation:</label>
+                                    <input type="text" id="i_prep_1" name="i_prep[]" placeholder="chopped">
+                                </div>
+                            </div>
+                            <div class="ingredient-row-2">
+                                <div class="ingredient-field-full">
+                                    <label for="i_note_1">Note:</label>
+                                    <input type="text" id="i_note_1" name="i_note[]" placeholder="Any special notes">
+                                </div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                    <button type="button" class="add-more-btn" onclick="addIngredient()">+ Add Another Ingredient</button>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-emoji="👩‍🍳"><span class="legend-text">Instructions</span></legend>
+                    <div id="instructions-container">
+                        {{range $index, $instruction := .Instructions}}
+                        <div class="instruction-group">
+                            <div class="form-group">
+                                <label for="step_{{add $index 1}}">Step {{add $index 1}}:</label>
+                                <textarea id="step_{{add $index 1}}" name="step[]" rows="3" placeholder="Describe this cooking step">{{$instruction}}</textarea>
+                            </div>
+                            {{if ne $index 0}}
+                            <button type="button" class="remove-btn" onclick="removeInstruction(this)">× Remove</button>
+                            {{end}}
+                        </div>
+                        {{else}}
+                        <div class="instruction-group">
+                            <div class="form-group">
+                                <label for="step_1">Step 1:</label>
+                                <textarea id="step_1" name="step[]" rows="3" placeholder="Describe this cooking step"></textarea>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                    <button type="button" class="add-more-btn" onclick="addInstruction()">+ Add Another Step</button>
+                </fieldset>
+
+                <div class="form-group">
+                    <label for="yields">Yields:</label>
+                    <input type="text" id="yields" name="yields" value="{{.Yields}}" placeholder="e.g., 4 servings">
+                </div>
+
+                <div class="form-group">
+                    <label for="keeps_for">Keeps For:</label>
+                    <input type="text" id="keeps_for" name="keeps_for" value="{{.KeepsFor}}" placeholder="e.g., 3 days refrigerated">
+                </div>
+
+                <div class="form-group">
+                    <label for="prep_time">Prep Time:</label>
+                    <input type="text" id="prep_time" name="prep_time" value="{{.PrepTime}}" placeholder="e.g., 15 minutes">
+                </div>
+
+                <div class="form-group">
+                    <label for="total_time">Total Time:</label>
+                    <input type="text" id="total_time" name="total_time" value="{{.TotalTime}}" placeholder="e.g., 45 minutes">
+                </div>
+
+                <fieldset>
+                    <legend data-emoji="📝"><span class="legend-text">Notes</span></legend>
+                    <div id="notes-container">
+                        {{range $index, $note := .Notes}}
+                        <div class="note-group">
+                            <div class="form-group">
+                                <label for="note_{{add $index 1}}">Note:</label>
+                                <textarea id="note_{{add $index 1}}" name="note[]" rows="2" placeholder="Any additional cooking tips">{{$note}}</textarea>
+                            </div>
+                            {{if ne $index 0}}
+                            <button type="button" class="remove-btn" onclick="removeNote(this)">× Remove</button>
+                            {{end}}
+                        </div>
+                        {{else}}
+                        <div class="note-group">
+                            <div class="form-group">
+                                <label for="note_1">Note:</label>
+                                <textarea id="note_1" name="note[]" rows="2" placeholder="Any additional cooking tips"></textarea>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                    <button type="button" class="add-more-btn" onclick="addNote()">+ Add Another Note</button>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-emoji="🏷️"><span class="legend-text">Tags</span></legend>
+                    <div id="tags-container">
+                        {{range $index, $tag := .Tags}}
+                        <div class="tag-group">
+                            <div class="form-group">
+                                <label for="tag_{{add $index 1}}">Tag:</label>
+                                <input type="text" id="tag_{{add $index 1}}" name="tag[]" value="{{$tag}}" placeholder="e.g., vegetarian, quick, dessert">
+                            </div>
+                            {{if ne $index 0}}
+                            <button type="button" class="remove-btn" onclick="removeTag(this)">× Remove</button>
+                            {{end}}
+                        </div>
+                        {{else}}
+                        <div class="tag-group">
+                            <div class="form-group">
+                                <label for="tag_1">Tag:</label>
+                                <input type="text" id="tag_1" name="tag[]" placeholder="e.g., vegetarian, quick, dessert">
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                    <button type="button" class="add-more-btn" onclick="addTag()">+ Add Another Tag</button>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-emoji="📖"><span class="legend-text">Source</span></legend>
+                    <div class="form-group">
+                        <label for="s_name">Source Name:</label>
+                        <input type="text" id="s_name" name="s_name" value="{{.Source.Name}}" placeholder="e.g., Grandma's Recipe Book">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Source Type:</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="s_type_book" name="s_type" value="book" {{if eq .Source.Type "book"}}checked{{end}} onchange="toggleSourceLink()">
+                                <label for="s_type_book">Book</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="s_type_website" name="s_type" value="website" {{if eq .Source.Type "website"}}checked{{end}} onchange="toggleSourceLink()">
+                                <label for="s_type_website">Website</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="source-link-group" {{if ne .Source.Type "website"}}style="display: none;"{{end}}>
+                        <label for="s_link">Source Link:</label>
+                        <input type="url" id="s_link" name="s_link" value="{{.Source.Link}}" placeholder="https://example.com/recipe">
+                    </div>
+                </fieldset>
+
+                <input type="submit" value="Update Recipe">
+            </form>
+        </div>
+        {{end}}
+    </main>
+
+    <script>
+        let ingredientCount = {{len .Ingredients}};
+        let instructionCount = {{len .Instructions}};
+        let tagCount = {{len .Tags}};
+        let noteCount = {{len .Notes}};
+
+        function addIngredient() {
+            ingredientCount++;
+            const container = document.getElementById('ingredients-container');
+            const newIngredient = document.createElement('div');
+            newIngredient.className = 'ingredient-group';
+            newIngredient.innerHTML = `
+                <div class="ingredient-row-1">
+                    <div class="ingredient-field">
+                        <label for="i_quantity_${ingredientCount}">Quantity:</label>
+                        <input type="text" id="i_quantity_${ingredientCount}" name="i_quantity[]" placeholder="2 cups">
+                    </div>
+                    <div class="ingredient-field">
+                        <label for="i_name_${ingredientCount}">Ingredient:</label>
+                        <input type="text" id="i_name_${ingredientCount}" name="i_name[]" placeholder="flour">
+                    </div>
+                    <div class="ingredient-field">
+                        <label for="i_prep_${ingredientCount}">Preparation:</label>
+                        <input type="text" id="i_prep_${ingredientCount}" name="i_prep[]" placeholder="chopped">
+                    </div>
+                </div>
+                <div class="ingredient-row-2">
+                    <div class="ingredient-field-full">
+                        <label for="i_note_${ingredientCount}">Note:</label>
+                        <input type="text" id="i_note_${ingredientCount}" name="i_note[]" placeholder="Any special notes">
+                    </div>
+                    <button type="button" class="remove-btn" onclick="removeIngredient(this)">× Remove</button>
+                </div>
+            `;
+            container.appendChild(newIngredient);
+        }
+
+        function addInstruction() {
+            instructionCount++;
+            const container = document.getElementById('instructions-container');
+            const newInstruction = document.createElement('div');
+            newInstruction.className = 'instruction-group';
+            newInstruction.innerHTML = `
+                <div class="form-group">
+                    <label for="step_${instructionCount}">Step ${instructionCount}:</label>
+                    <textarea id="step_${instructionCount}" name="step[]" rows="3" placeholder="Describe this cooking step"></textarea>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeInstruction(this)">× Remove</button>
+            `;
+            container.appendChild(newInstruction);
+        }
+
+        function addTag() {
+            tagCount++;
+            const container = document.getElementById('tags-container');
+            const newTag = document.createElement('div');
+            newTag.className = 'tag-group';
+            newTag.innerHTML = `
+                <div class="form-group">
+                    <label for="tag_${tagCount}">Tag:</label>
+                    <input type="text" id="tag_${tagCount}" name="tag[]" placeholder="e.g., vegetarian, quick, dessert">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeTag(this)">× Remove</button>
+            `;
+            container.appendChild(newTag);
+        }
+
+        function removeIngredient(button) {
+            button.parentElement.parentElement.remove();
+        }
+
+        function removeInstruction(button) {
+            button.parentElement.remove();
+            updateInstructionLabels();
+        }
+
+        function removeTag(button) {
+            button.parentElement.remove();
+        }
+
+        function addNote() {
+            noteCount++;
+            const container = document.getElementById('notes-container');
+            const newNote = document.createElement('div');
+            newNote.className = 'note-group';
+            newNote.innerHTML = `
+                <div class="form-group">
+                    <label for="note_${noteCount}">Note:</label>
+                    <textarea id="note_${noteCount}" name="note[]" rows="2" placeholder="Any additional cooking tips"></textarea>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeNote(this)">× Remove</button>
+            `;
+            container.appendChild(newNote);
+        }
+
+        function removeNote(button) {
+            button.parentElement.remove();
+        }
+
+        function updateInstructionLabels() {
+            const instructions = document.querySelectorAll('#instructions-container .instruction-group');
+            instructions.forEach((instruction, index) => {
+                const label = instruction.querySelector('label');
+                const textarea = instruction.querySelector('textarea');
+                label.textContent = `Step ${index + 1}:`;
+                label.setAttribute('for', `step_${index + 1}`);
+                textarea.setAttribute('id', `step_${index + 1}`);
+            });
+        }
+
+        function toggleSourceLink() {
+            const websiteRadio = document.getElementById('s_type_website');
+            const sourceLinkGroup = document.getElementById('source-link-group');
+            const sourceLinkInput = document.getElementById('s_link');
+            
+            if (websiteRadio.checked) {
+                sourceLinkGroup.style.display = 'block';
+                sourceLinkInput.required = true;
+            } else {
+                sourceLinkGroup.style.display = 'none';
+                sourceLinkInput.required = false;
+                sourceLinkInput.value = '';
+            }
+        }
+
+        // Initialize counters to avoid conflicts when adding new items
+        if (ingredientCount === 0) ingredientCount = 1;
+        if (instructionCount === 0) instructionCount = 1;
+        if (tagCount === 0) tagCount = 1;
+        if (noteCount === 0) noteCount = 1;
+    </script>
+</body>
+</html>

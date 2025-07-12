@@ -15,79 +15,405 @@
     <nav class="nav">
         <a href="/">Home</a>
         <a href="/create">Add Recipe</a>
+        <button id="editToggle" class="edit-btn">✏️ Edit Recipe</button>
     </nav>
 
     <main class="recipe-detail">
-        <h2>{{.Name}}</h2>
+        <!-- Success message for updates -->
+        <div id="successMessage" class="success-message" style="display: none;">
+            <p>✅ Recipe updated successfully!</p>
+        </div>
+
+        <!-- Recipe Name -->
+        <div class="recipe-name-container">
+            <h2 id="recipeName" class="editable-field">{{.Name}}</h2>
+            <input type="text" id="recipeNameEdit" class="edit-input" value="{{.Name}}" style="display: none;">
+        </div>
         
+        <!-- Recipe Meta -->
         <div class="recipe-meta">
             <div class="meta-item">
                 <span class="meta-label">Yields</span>
-                <span class="meta-value">{{.Yields}}</span>
+                <span id="yields" class="meta-value editable-field">{{.Yields}}</span>
+                <input type="text" id="yieldsEdit" class="edit-input" value="{{.Yields}}" style="display: none;">
             </div>
             <div class="meta-item">
                 <span class="meta-label">Keeps For</span>
-                <span class="meta-value">{{.KeepsFor}}</span>
+                <span id="keepsFor" class="meta-value editable-field">{{.KeepsFor}}</span>
+                <input type="text" id="keepsForEdit" class="edit-input" value="{{.KeepsFor}}" style="display: none;">
             </div>
             <div class="meta-item">
                 <span class="meta-label">Prep Time</span>
-                <span class="meta-value">{{.PrepTime}}</span>
+                <span id="prepTime" class="meta-value editable-field">{{.PrepTime}}</span>
+                <input type="text" id="prepTimeEdit" class="edit-input" value="{{.PrepTime}}" style="display: none;">
             </div>
             <div class="meta-item">
                 <span class="meta-label">Total Time</span>
-                <span class="meta-value">{{.TotalTime}}</span>
+                <span id="totalTime" class="meta-value editable-field">{{.TotalTime}}</span>
+                <input type="text" id="totalTimeEdit" class="edit-input" value="{{.TotalTime}}" style="display: none;">
             </div>
         </div>
 
+        <!-- Ingredients Section -->
         <section>
-            <h3>🥘 Ingredients</h3>
-            <ul class="ingredients-list">
-                {{range .Ingredients}}
-                <li>
-                    {{.Quantity}} {{.Name}}{{if .Prep}} ({{.Prep}}){{end}}
-                    {{if .Note}}<br><em>{{.Note}}</em>{{end}}
-                </li>
-                {{end}}
-            </ul>
+            <div class="section-header">
+                <h3>🥘 Ingredients</h3>
+                <button id="addIngredientBtn" class="add-btn" style="display: none;">+ Add Ingredient</button>
+            </div>
+            <div id="ingredientsView" class="ingredients-view">
+                <ul class="ingredients-list">
+                    {{range $index, $ingredient := .Ingredients}}
+                    <li class="ingredient-item" data-index="{{$index}}">
+                        <span class="ingredient-display">
+                            {{$ingredient.Quantity}} {{$ingredient.Name}}{{if $ingredient.Prep}} ({{$ingredient.Prep}}){{end}}
+                            {{if $ingredient.Note}}<br><em>{{$ingredient.Note}}</em>{{end}}
+                        </span>
+                        <div class="ingredient-edit" style="display: none;">
+                            <div class="ingredient-edit-row">
+                                <input type="text" class="ingredient-quantity" value="{{$ingredient.Quantity}}" placeholder="Quantity">
+                                <input type="text" class="ingredient-name" value="{{$ingredient.Name}}" placeholder="Ingredient">
+                                <input type="text" class="ingredient-prep" value="{{$ingredient.Prep}}" placeholder="Preparation">
+                            </div>
+                            <div class="ingredient-edit-row">
+                                <input type="text" class="ingredient-note" value="{{$ingredient.Note}}" placeholder="Note">
+                                <button class="remove-ingredient-btn" onclick="removeIngredient(this)">× Remove</button>
+                            </div>
+                        </div>
+                    </li>
+                    {{end}}
+                </ul>
+            </div>
         </section>
 
+        <!-- Instructions Section -->
         <section>
-            <h3>👩‍🍳 Instructions</h3>
-            <ul class="instructions-list">
-                {{range .Instructions}}
-                <li>{{.}}</li>
-                {{end}}
-            </ul>
+            <div class="section-header">
+                <h3>👩‍🍳 Instructions</h3>
+                <button id="addInstructionBtn" class="add-btn" style="display: none;">+ Add Step</button>
+            </div>
+            <div id="instructionsView" class="instructions-view">
+                <ol class="instructions-list">
+                    {{range $index, $instruction := .Instructions}}
+                    <li class="instruction-item" data-index="{{$index}}">
+                        <span class="instruction-display">{{$instruction}}</span>
+                        <div class="instruction-edit" style="display: none;">
+                            <textarea class="instruction-text">{{$instruction}}</textarea>
+                            <button class="remove-instruction-btn" onclick="removeInstruction(this)">× Remove</button>
+                        </div>
+                    </li>
+                    {{end}}
+                </ol>
+            </div>
         </section>
 
-        {{if .Notes}}
+        <!-- Notes Section -->
         <section>
-            <h3>📝 Notes</h3>
-            <ul class="notes-list">
-                {{range .Notes}}
-                <li>{{.}}</li>
-                {{end}}
-            </ul>
+            <div class="section-header">
+                <h3>📝 Notes</h3>
+                <button id="addNoteBtn" class="add-btn" style="display: none;">+ Add Note</button>
+            </div>
+            <div id="notesView" class="notes-view">
+                <ul class="notes-list">
+                    {{range $index, $note := .Notes}}
+                    <li class="note-item" data-index="{{$index}}">
+                        <span class="note-display">{{$note}}</span>
+                        <div class="note-edit" style="display: none;">
+                            <textarea class="note-text">{{$note}}</textarea>
+                            <button class="remove-note-btn" onclick="removeNote(this)">× Remove</button>
+                        </div>
+                    </li>
+                    {{end}}
+                </ul>
+            </div>
         </section>
-        {{end}}
 
-        {{if .Tags}}
+        <!-- Tags Section -->
         <section>
-            <h3>🏷️ Tags</h3>
-            <div class="tags">
-                {{range .Tags}}
-                <span class="tag">{{.}}</span>
-                {{end}}
+            <div class="section-header">
+                <h3>🏷️ Tags</h3>
+                <button id="addTagBtn" class="add-btn" style="display: none;">+ Add Tag</button>
+            </div>
+            <div id="tagsView" class="tags-view">
+                <div class="tags">
+                    {{range $index, $tag := .Tags}}
+                    <span class="tag tag-item" data-index="{{$index}}">
+                        <span class="tag-display">{{$tag}}</span>
+                        <input type="text" class="tag-edit" value="{{$tag}}" style="display: none;">
+                        <button class="remove-tag-btn" onclick="removeTag(this)" style="display: none;">×</button>
+                    </span>
+                    {{end}}
+                </div>
+            </div>
+        </section>
+
+        <!-- Source Section -->
+        {{if .Source.Name}}
+        <section>
+            <div class="section-header">
+                <h3>📖 Source</h3>
+            </div>
+            <div id="sourceView" class="source-view">
+                <div class="source-display">
+                    <p><a href="{{.Source.Link}}" target="_blank">{{.Source.Name}}</a></p>
+                </div>
+                <div class="source-edit" style="display: none;">
+                    <input type="text" id="sourceName" value="{{.Source.Name}}" placeholder="Source name">
+                    <div class="radio-group">
+                        <label><input type="radio" name="sourceType" value="book" {{if eq .Source.Type "book"}}checked{{end}}> Book</label>
+                        <label><input type="radio" name="sourceType" value="website" {{if eq .Source.Type "website"}}checked{{end}}> Website</label>
+                    </div>
+                    <input type="url" id="sourceLink" value="{{.Source.Link}}" placeholder="Source link" {{if ne .Source.Type "website"}}style="display: none;"{{end}}>
+                </div>
             </div>
         </section>
         {{end}}
 
-        {{if .Source.Name}}
-        <section>
-            <h3>📖 Source</h3>
-            <p><a href="{{.Source.Link}}" target="_blank">{{.Source.Name}}</a></p>
-        </section>
-        {{end}}
+        <!-- Edit Controls -->
+        <div id="editControls" class="edit-controls" style="display: none;">
+            <button id="saveBtn" class="save-btn">💾 Save Changes</button>
+            <button id="cancelBtn" class="cancel-btn">❌ Cancel</button>
+        </div>
     </main>
+
+    <script>
+        let isEditMode = false;
+        let originalData = {};
+
+        const editToggle = document.getElementById('editToggle');
+        const editControls = document.getElementById('editControls');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        // Store original data
+        function storeOriginalData() {
+            originalData = {
+                name: document.getElementById('recipeName').textContent,
+                yields: document.getElementById('yields').textContent,
+                keepsFor: document.getElementById('keepsFor').textContent,
+                prepTime: document.getElementById('prepTime').textContent,
+                totalTime: document.getElementById('totalTime').textContent,
+                ingredients: Array.from(document.querySelectorAll('.ingredient-item')).map(item => ({
+                    quantity: item.querySelector('.ingredient-quantity')?.value || '',
+                    name: item.querySelector('.ingredient-name')?.value || '',
+                    prep: item.querySelector('.ingredient-prep')?.value || '',
+                    note: item.querySelector('.ingredient-note')?.value || ''
+                })),
+                instructions: Array.from(document.querySelectorAll('.instruction-item')).map(item => 
+                    item.querySelector('.instruction-text')?.value || item.querySelector('.instruction-display').textContent
+                ),
+                notes: Array.from(document.querySelectorAll('.note-item')).map(item => 
+                    item.querySelector('.note-text')?.value || item.querySelector('.note-display').textContent
+                ),
+                tags: Array.from(document.querySelectorAll('.tag-item')).map(item => 
+                    item.querySelector('.tag-edit')?.value || item.querySelector('.tag-display').textContent
+                ),
+                source: {
+                    name: document.getElementById('sourceName')?.value || '',
+                    type: document.querySelector('input[name="sourceType"]:checked')?.value || '',
+                    link: document.getElementById('sourceLink')?.value || ''
+                }
+            };
+        }
+
+        // Toggle edit mode
+        editToggle.addEventListener('click', () => {
+            if (!isEditMode) {
+                enterEditMode();
+            }
+        });
+
+        saveBtn.addEventListener('click', saveChanges);
+        cancelBtn.addEventListener('click', cancelEdit);
+
+        function enterEditMode() {
+            isEditMode = true;
+            storeOriginalData();
+            
+            editToggle.style.display = 'none';
+            editControls.style.display = 'flex';
+            
+            // Show edit fields, hide display fields
+            document.querySelectorAll('.editable-field').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.edit-input').forEach(el => el.style.display = 'inline-block');
+            
+            // Show add buttons
+            document.querySelectorAll('.add-btn').forEach(btn => btn.style.display = 'inline-block');
+            
+            // Switch ingredient displays
+            document.querySelectorAll('.ingredient-display').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.ingredient-edit').forEach(el => el.style.display = 'block');
+            
+            // Switch instruction displays
+            document.querySelectorAll('.instruction-display').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.instruction-edit').forEach(el => el.style.display = 'block');
+            
+            // Switch note displays
+            document.querySelectorAll('.note-display').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.note-edit').forEach(el => el.style.display = 'block');
+            
+            // Switch tag displays
+            document.querySelectorAll('.tag-display').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tag-edit').forEach(el => el.style.display = 'inline-block');
+            document.querySelectorAll('.remove-tag-btn').forEach(btn => btn.style.display = 'inline-block');
+            
+            // Show source edit
+            document.querySelector('.source-display')?.style.setProperty('display', 'none');
+            document.querySelector('.source-edit')?.style.setProperty('display', 'block');
+        }
+
+        function exitEditMode() {
+            isEditMode = false;
+            
+            editToggle.style.display = 'inline-block';
+            editControls.style.display = 'none';
+            
+            // Hide edit fields, show display fields
+            document.querySelectorAll('.editable-field').forEach(el => el.style.display = 'inline');
+            document.querySelectorAll('.edit-input').forEach(el => el.style.display = 'none');
+            
+            // Hide add buttons
+            document.querySelectorAll('.add-btn').forEach(btn => btn.style.display = 'none');
+            
+            // Switch ingredient displays
+            document.querySelectorAll('.ingredient-display').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.ingredient-edit').forEach(el => el.style.display = 'none');
+            
+            // Switch instruction displays
+            document.querySelectorAll('.instruction-display').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.instruction-edit').forEach(el => el.style.display = 'none');
+            
+            // Switch note displays
+            document.querySelectorAll('.note-display').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.note-edit').forEach(el => el.style.display = 'none');
+            
+            // Switch tag displays
+            document.querySelectorAll('.tag-display').forEach(el => el.style.display = 'inline');
+            document.querySelectorAll('.tag-edit').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.remove-tag-btn').forEach(btn => btn.style.display = 'none');
+            
+            // Hide source edit
+            document.querySelector('.source-display')?.style.setProperty('display', 'block');
+            document.querySelector('.source-edit')?.style.setProperty('display', 'none');
+        }
+
+        function cancelEdit() {
+            // Refresh the page to discard all changes
+            window.location.reload();
+        }
+
+        async function saveChanges() {
+            const formData = new FormData();
+            
+            // Basic fields
+            formData.append('r_name', document.getElementById('recipeNameEdit').value);
+            formData.append('yields', document.getElementById('yieldsEdit').value);
+            formData.append('keeps_for', document.getElementById('keepsForEdit').value);
+            formData.append('prep_time', document.getElementById('prepTimeEdit').value);
+            formData.append('total_time', document.getElementById('totalTimeEdit').value);
+            
+            // Ingredients
+            document.querySelectorAll('.ingredient-item').forEach(item => {
+                const quantity = item.querySelector('.ingredient-quantity').value;
+                const name = item.querySelector('.ingredient-name').value;
+                const prep = item.querySelector('.ingredient-prep').value;
+                const note = item.querySelector('.ingredient-note').value;
+                
+                formData.append('i_quantity[]', quantity);
+                formData.append('i_name[]', name);
+                formData.append('i_prep[]', prep);
+                formData.append('i_note[]', note);
+            });
+            
+            // Instructions
+            document.querySelectorAll('.instruction-item .instruction-text').forEach(textarea => {
+                formData.append('step[]', textarea.value);
+            });
+            
+            // Notes
+            document.querySelectorAll('.note-item .note-text').forEach(textarea => {
+                formData.append('note[]', textarea.value);
+            });
+            
+            // Tags
+            document.querySelectorAll('.tag-item .tag-edit').forEach(input => {
+                formData.append('tag[]', input.value);
+            });
+            
+            // Source
+            const sourceName = document.getElementById('sourceName');
+            const sourceType = document.querySelector('input[name="sourceType"]:checked');
+            const sourceLink = document.getElementById('sourceLink');
+            
+            if (sourceName) formData.append('s_name', sourceName.value);
+            if (sourceType) formData.append('s_type', sourceType.value);
+            if (sourceLink) formData.append('s_link', sourceLink.value);
+            
+            try {
+                const response = await fetch(window.location.pathname, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    // Update display values
+                    updateDisplayValues();
+                    exitEditMode();
+                    showSuccessMessage();
+                    
+                    // Reload page to get fresh data
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    alert('Error saving recipe. Please try again.');
+                }
+            } catch (error) {
+                alert('Error saving recipe. Please try again.');
+            }
+        }
+
+        function updateDisplayValues() {
+            document.getElementById('recipeName').textContent = document.getElementById('recipeNameEdit').value;
+            document.getElementById('yields').textContent = document.getElementById('yieldsEdit').value;
+            document.getElementById('keepsFor').textContent = document.getElementById('keepsForEdit').value;
+            document.getElementById('prepTime').textContent = document.getElementById('prepTimeEdit').value;
+            document.getElementById('totalTime').textContent = document.getElementById('totalTimeEdit').value;
+        }
+
+        function showSuccessMessage() {
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add/remove functions
+        function removeIngredient(btn) {
+            btn.closest('.ingredient-item').remove();
+        }
+
+        function removeInstruction(btn) {
+            btn.closest('.instruction-item').remove();
+        }
+
+        function removeNote(btn) {
+            btn.closest('.note-item').remove();
+        }
+
+        function removeTag(btn) {
+            btn.closest('.tag-item').remove();
+        }
+
+        // Source type toggle
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'sourceType') {
+                const linkField = document.getElementById('sourceLink');
+                if (linkField) {
+                    linkField.style.display = e.target.value === 'website' ? 'block' : 'none';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
