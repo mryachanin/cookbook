@@ -159,6 +159,51 @@ p {
     left: 0;
 }
 
+/* Search container */
+.search-container {
+    margin: var(--spacing-xl) 0;
+    display: flex;
+    justify-content: center;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: white;
+    box-shadow: var(--shadow-light);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #667eea;
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+.search-input::placeholder {
+    color: #a0aec0;
+}
+
+/* No results message */
+.no-results {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-light);
+    margin-top: var(--spacing-xl);
+}
+
+.no-results p {
+    color: #718096;
+    font-size: 1.1rem;
+}
+
 /* Recipe cards */
 .recipe-grid {
     display: grid;
