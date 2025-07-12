@@ -584,6 +584,90 @@ input[type="submit"]:active {
     transform: translateY(-2px) scale(0.98);
 }
 
+/* Dynamic form buttons */
+.add-more-btn {
+    background: var(--accent-gradient);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-light);
+}
+
+.add-more-btn:hover {
+    box-shadow: var(--shadow-medium);
+    opacity: 0.9;
+}
+
+.remove-btn {
+    background: var(--secondary-gradient);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: var(--spacing-sm);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-light);
+}
+
+.remove-btn:hover {
+    box-shadow: var(--shadow-medium);
+    opacity: 0.9;
+}
+
+/* Dynamic form groups */
+.ingredient-group, .instruction-group, .tag-group {
+    border: 1px solid rgba(102, 126, 234, 0.15);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+}
+
+.ingredient-group:first-child, .instruction-group:first-child, .tag-group:first-child {
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+textarea::placeholder {
+    color: #a0aec0;
+    font-style: italic;
+}
+
 /* Success message */
 .success-message {
     background: var(--success-gradient);

@@ -35,30 +35,40 @@
 
                 <fieldset>
                     <legend>🥘 Ingredients</legend>
-                    <div class="form-group">
-                        <label for="i_quantity">Quantity:</label>
-                        <input type="text" id="i_quantity" name="i_quantity" placeholder="e.g., 2 cups">
+                    <div id="ingredients-container">
+                        <div class="ingredient-group">
+                            <div class="form-group">
+                                <label for="i_quantity_1">Quantity:</label>
+                                <input type="text" id="i_quantity_1" name="i_quantity[]" placeholder="e.g., 2 cups">
+                            </div>
+                            <div class="form-group">
+                                <label for="i_name_1">Ingredient Name:</label>
+                                <input type="text" id="i_name_1" name="i_name[]" placeholder="e.g., flour">
+                            </div>
+                            <div class="form-group">
+                                <label for="i_prep_1">Preparation:</label>
+                                <input type="text" id="i_prep_1" name="i_prep[]" placeholder="e.g., chopped, diced">
+                            </div>
+                            <div class="form-group">
+                                <label for="i_note_1">Note:</label>
+                                <input type="text" id="i_note_1" name="i_note[]" placeholder="Any special notes">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="i_name">Ingredient Name:</label>
-                        <input type="text" id="i_name" name="i_name" placeholder="e.g., flour">
-                    </div>
-                    <div class="form-group">
-                        <label for="i_prep">Preparation:</label>
-                        <input type="text" id="i_prep" name="i_prep" placeholder="e.g., chopped, diced">
-                    </div>
-                    <div class="form-group">
-                        <label for="i_note">Note:</label>
-                        <input type="text" id="i_note" name="i_note" placeholder="Any special notes">
-                    </div>
+                    <button type="button" class="add-more-btn" onclick="addIngredient()">+ Add Another Ingredient</button>
                 </fieldset>
 
                 <fieldset>
                     <legend>👩‍🍳 Instructions</legend>
-                    <div class="form-group">
-                        <label for="step">Step:</label>
-                        <input type="text" id="step" name="step" placeholder="Describe each cooking step">
+                    <div id="instructions-container">
+                        <div class="instruction-group">
+                            <div class="form-group">
+                                <label for="step_1">Step 1:</label>
+                                <textarea id="step_1" name="step[]" rows="3" placeholder="Describe this cooking step"></textarea>
+                            </div>
+                        </div>
                     </div>
+                    <button type="button" class="add-more-btn" onclick="addInstruction()">+ Add Another Step</button>
                 </fieldset>
 
                 <div class="form-group">
@@ -91,10 +101,15 @@
 
                 <fieldset>
                     <legend>🏷️ Tags</legend>
-                    <div class="form-group">
-                        <label for="tag">Tag:</label>
-                        <input type="text" id="tag" name="tag" placeholder="e.g., vegetarian, quick, dessert">
+                    <div id="tags-container">
+                        <div class="tag-group">
+                            <div class="form-group">
+                                <label for="tag_1">Tag:</label>
+                                <input type="text" id="tag_1" name="tag[]" placeholder="e.g., vegetarian, quick, dessert">
+                            </div>
+                        </div>
                     </div>
+                    <button type="button" class="add-more-btn" onclick="addTag()">+ Add Another Tag</button>
                 </fieldset>
 
                 <fieldset>
@@ -129,5 +144,92 @@
         </div>
         {{end}}
     </main>
+
+    <script>
+        let ingredientCount = 1;
+        let instructionCount = 1;
+        let tagCount = 1;
+
+        function addIngredient() {
+            ingredientCount++;
+            const container = document.getElementById('ingredients-container');
+            const newIngredient = document.createElement('div');
+            newIngredient.className = 'ingredient-group';
+            newIngredient.innerHTML = `
+                <div class="form-group">
+                    <label for="i_quantity_${ingredientCount}">Quantity:</label>
+                    <input type="text" id="i_quantity_${ingredientCount}" name="i_quantity[]" placeholder="e.g., 2 cups">
+                </div>
+                <div class="form-group">
+                    <label for="i_name_${ingredientCount}">Ingredient Name:</label>
+                    <input type="text" id="i_name_${ingredientCount}" name="i_name[]" placeholder="e.g., flour">
+                </div>
+                <div class="form-group">
+                    <label for="i_prep_${ingredientCount}">Preparation:</label>
+                    <input type="text" id="i_prep_${ingredientCount}" name="i_prep[]" placeholder="e.g., chopped, diced">
+                </div>
+                <div class="form-group">
+                    <label for="i_note_${ingredientCount}">Note:</label>
+                    <input type="text" id="i_note_${ingredientCount}" name="i_note[]" placeholder="Any special notes">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeIngredient(this)">× Remove</button>
+            `;
+            container.appendChild(newIngredient);
+        }
+
+        function addInstruction() {
+            instructionCount++;
+            const container = document.getElementById('instructions-container');
+            const newInstruction = document.createElement('div');
+            newInstruction.className = 'instruction-group';
+            newInstruction.innerHTML = `
+                <div class="form-group">
+                    <label for="step_${instructionCount}">Step ${instructionCount}:</label>
+                    <textarea id="step_${instructionCount}" name="step[]" rows="3" placeholder="Describe this cooking step"></textarea>
+                </div>
+                <button type="button" class="remove-btn" onclick="removeInstruction(this)">× Remove</button>
+            `;
+            container.appendChild(newInstruction);
+        }
+
+        function addTag() {
+            tagCount++;
+            const container = document.getElementById('tags-container');
+            const newTag = document.createElement('div');
+            newTag.className = 'tag-group';
+            newTag.innerHTML = `
+                <div class="form-group">
+                    <label for="tag_${tagCount}">Tag:</label>
+                    <input type="text" id="tag_${tagCount}" name="tag[]" placeholder="e.g., vegetarian, quick, dessert">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeTag(this)">× Remove</button>
+            `;
+            container.appendChild(newTag);
+        }
+
+        function removeIngredient(button) {
+            button.parentElement.remove();
+        }
+
+        function removeInstruction(button) {
+            button.parentElement.remove();
+            updateInstructionLabels();
+        }
+
+        function removeTag(button) {
+            button.parentElement.remove();
+        }
+
+        function updateInstructionLabels() {
+            const instructions = document.querySelectorAll('#instructions-container .instruction-group');
+            instructions.forEach((instruction, index) => {
+                const label = instruction.querySelector('label');
+                const textarea = instruction.querySelector('textarea');
+                label.textContent = `Step ${index + 1}:`;
+                label.setAttribute('for', `step_${index + 1}`);
+                textarea.setAttribute('id', `step_${index + 1}`);
+            });
+        }
+    </script>
 </body>
 </html>
