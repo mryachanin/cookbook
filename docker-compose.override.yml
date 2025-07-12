@@ -1,0 +1,9 @@
+# Local development override - uses locally built image
+# This file is automatically used by docker-compose for local development
+---
+services:
+  cookbook-app:
+    image: cookbook-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.cookbook-app

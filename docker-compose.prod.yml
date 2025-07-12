@@ -1,0 +1,7 @@
+# Production override - uses GitHub Container Registry image
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+---
+services:
+  cookbook-app:
+    image: ghcr.io/mryachanin/cookbook-app:latest
+    pull_policy: always

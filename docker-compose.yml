@@ -5,8 +5,8 @@ services:
     container_name: cookbook-couchdb
     hostname: cookbook-couchdb
     environment:
-      - COUCHDB_USER=${COUCHDB_USER}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+      - COUCHDB_USER=${COUCHDB_USER:-admin}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD:-admin}
     ports:
       - 5984:5984
     volumes:
@@ -16,9 +16,9 @@ services:
   cookbook-app:
     depends_on:
       - cookbook-couchdb
-    image: ghcr.io/mryachanin/cookbook-app:latest
+    image: ${COOKBOOK_IMAGE:-ghcr.io/mryachanin/cookbook-app:latest}
     ports:
       - 0.0.0.0:8080:8080
     volumes:
-      - ./config_json:/usr/src/app/config.json
+      - ./config_json:/root/config.json
     restart: unless-stopped
