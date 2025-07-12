@@ -639,7 +639,7 @@ input[type="submit"]:active {
 }
 
 /* Dynamic form groups */
-.ingredient-group, .instruction-group, .tag-group {
+.ingredient-group, .instruction-group, .tag-group, .note-group {
     border: 1px solid rgba(102, 126, 234, 0.15);
     border-radius: var(--radius-sm);
     padding: var(--spacing-lg);
@@ -648,7 +648,7 @@ input[type="submit"]:active {
     position: relative;
 }
 
-.ingredient-group:first-child, .instruction-group:first-child, .tag-group:first-child {
+.ingredient-group:first-child, .instruction-group:first-child, .tag-group:first-child, .note-group:first-child {
     border: none;
     background: transparent;
     padding: 0;
