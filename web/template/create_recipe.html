@@ -67,7 +67,7 @@
                     <div id="instructions-container">
                         <div class="instruction-group">
                             <div class="form-group">
-                                <label for="step_1">Step 1:</label>
+                                <label for="step_1">Instruction:</label>
                                 <textarea id="step_1" name="step[]" rows="3" placeholder="Describe this cooking step"></textarea>
                             </div>
                         </div>
@@ -198,7 +198,7 @@
             newInstruction.className = 'instruction-group';
             newInstruction.innerHTML = `
                 <div class="form-group">
-                    <label for="step_${instructionCount}">Step ${instructionCount}:</label>
+                    <label for="step_${instructionCount}">Instruction:</label>
                     <textarea id="step_${instructionCount}" name="step[]" rows="3" placeholder="Describe this cooking step"></textarea>
                 </div>
                 <button type="button" class="remove-btn" onclick="removeInstruction(this)">× Remove</button>
@@ -258,7 +258,7 @@
             instructions.forEach((instruction, index) => {
                 const label = instruction.querySelector('label');
                 const textarea = instruction.querySelector('textarea');
-                label.textContent = `Step ${index + 1}:`;
+                label.textContent = 'Instruction:';
                 label.setAttribute('for', `step_${index + 1}`);
                 textarea.setAttribute('id', `step_${index + 1}`);
             });

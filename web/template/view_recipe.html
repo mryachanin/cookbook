@@ -93,17 +93,17 @@
                 <button id="addInstructionBtn" class="add-btn" style="display: none;">+ Add Step</button>
             </div>
             <div id="instructionsView" class="instructions-view">
-                <ol class="instructions-list">
+                <div class="instructions-list">
                     {{range $index, $instruction := .Instructions}}
-                    <li class="instruction-item" data-index="{{$index}}">
+                    <div class="instruction-item" data-index="{{$index}}">
                         <span class="instruction-display">{{$instruction}}</span>
                         <div class="instruction-edit" style="display: none;">
                             <textarea class="instruction-text">{{$instruction}}</textarea>
                             <button class="remove-instruction-btn" onclick="removeInstruction(this)">× Remove</button>
                         </div>
-                    </li>
+                    </div>
                     {{end}}
-                </ol>
+                </div>
             </div>
         </section>
 

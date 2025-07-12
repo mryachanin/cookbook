@@ -752,7 +752,7 @@ section h3::after {
     background: var(--primary-gradient);
 }
 
-.ingredients-list li, .instructions-list li, .notes-list li {
+.ingredients-list li, .instructions-list .instruction-item, .notes-list li {
     background: rgba(255, 255, 255, 0.9);
     margin-bottom: var(--spacing-md);
     padding: var(--spacing-lg);
@@ -763,7 +763,7 @@ section h3::after {
     backdrop-filter: blur(10px);
 }
 
-.ingredients-list li:hover, .instructions-list li:hover, .notes-list li:hover {
+.ingredients-list li:hover, .instructions-list .instruction-item:hover, .notes-list li:hover {
     box-shadow: var(--shadow-medium);
     border-color: rgba(102, 126, 234, 0.3);
 }
@@ -790,14 +790,18 @@ section h3::after {
     counter-reset: step-counter;
 }
 
-.instructions-list li {
+.instructions-list .instruction-item {
     counter-increment: step-counter;
     position: relative;
     padding-left: 4rem;
     background: linear-gradient(90deg, rgba(79, 172, 254, 0.1), transparent 30%);
+    margin-bottom: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-radius: var(--radius-sm);
 }
 
-.instructions-list li::before {
+.instructions-list .instruction-item::before {
     content: counter(step-counter);
     position: absolute;
     left: var(--spacing-md);
@@ -1279,11 +1283,11 @@ textarea::placeholder {
         padding: var(--spacing-md);
     }
     
-    .ingredients-list li, .instructions-list li, .notes-list li {
+    .ingredients-list li, .instructions-list .instruction-item, .notes-list li {
         padding: var(--spacing-md);
     }
     
-    .instructions-list li {
+    .instructions-list .instruction-item {
         padding-left: 3rem;
     }
     
