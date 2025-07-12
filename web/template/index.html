@@ -1,10 +1,31 @@
-<html>
-  <body>
-    <h2>Recipes:</h2>
-    <ul>
-      {{range .}}
-      <li><a href="/recipe/{{.Value}}">{{.Key}}</a></li>
-      {{end}}
-    </ul>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbook - Recipe Collection</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🍳 My Cookbook</h1>
+        <p>A delicious collection of recipes</p>
+    </header>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/create">Add Recipe</a>
+    </nav>
+
+    <main>
+        <h2>Recipe Collection</h2>
+        <div class="recipe-grid">
+            {{range .}}
+            <div class="recipe-card">
+                <h3><a href="/recipe/{{.Value}}">{{.Key}}</a></h3>
+            </div>
+            {{end}}
+        </div>
+    </main>
+</body>
 </html>

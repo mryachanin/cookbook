@@ -1,35 +1,90 @@
-<html>
-  <body>
-    <h2>{{.Name}}</h2>
-    <p>Yields: {{.Yields}}</p>
-    <p>Keeps for: {{.KeepsFor}}</p>
-    <p>Prep time: {{.PrepTime}}</p>
-    <p>Total time: {{.TotalTime}}</p>
-    <h3>Ingredients</h3>
-    <ul>
-      {{range .Ingredients}}
-      <li>{{.Quantity}} {{.Name}}{{if .Prep}}&nbsp({{.Prep}})&nbsp{{end}}</li>
-      {{end}}
-    </ul>
-    <h3>Instructions</h3>
-    <ul>
-      {{range .Instructions}}
-      <li>{{.}}</li>
-      {{end}}
-    </ul>
-    <h3>Notes</h3>
-    <ul>
-      {{range .Notes}}
-      <li>{{.}}</li>
-      {{end}}
-    </ul>
-    <h3>Tags:</h3>
-    <ul>
-      {{range .Tags}}
-      <li>{{.}}</li>
-      {{end}}
-    </ul>
-    <p>Source: <a href={{.Source.Link}}>{{.Source.Name}}</a></p>
-    <hr>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Name}} - Cookbook</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🍳 My Cookbook</h1>
+        <p>A delicious collection of recipes</p>
+    </header>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/create">Add Recipe</a>
+    </nav>
+
+    <main class="recipe-detail">
+        <h2>{{.Name}}</h2>
+        
+        <div class="recipe-meta">
+            <div class="meta-item">
+                <span class="meta-label">Yields</span>
+                <span class="meta-value">{{.Yields}}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Keeps For</span>
+                <span class="meta-value">{{.KeepsFor}}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Prep Time</span>
+                <span class="meta-value">{{.PrepTime}}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Total Time</span>
+                <span class="meta-value">{{.TotalTime}}</span>
+            </div>
+        </div>
+
+        <section>
+            <h3>🥘 Ingredients</h3>
+            <ul class="ingredients-list">
+                {{range .Ingredients}}
+                <li>{{.Quantity}} {{.Name}}{{if .Prep}} ({{.Prep}}){{end}}</li>
+                {{end}}
+            </ul>
+        </section>
+
+        <section>
+            <h3>👩‍🍳 Instructions</h3>
+            <ul class="instructions-list">
+                {{range .Instructions}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </section>
+
+        {{if .Notes}}
+        <section>
+            <h3>📝 Notes</h3>
+            <ul class="notes-list">
+                {{range .Notes}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </section>
+        {{end}}
+
+        {{if .Tags}}
+        <section>
+            <h3>🏷️ Tags</h3>
+            <div class="tags">
+                {{range .Tags}}
+                <span class="tag">{{.}}</span>
+                {{end}}
+            </div>
+        </section>
+        {{end}}
+
+        {{if .Source.Name}}
+        <section>
+            <h3>📖 Source</h3>
+            <p><a href="{{.Source.Link}}" target="_blank">{{.Source.Name}}</a></p>
+        </section>
+        {{end}}
+    </main>
+</body>
 </html>

@@ -1,69 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Recipe - Cookbook</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
 <body>
-{{if .Success}}
-    <h1>Thanks for your recipe!</h1>
-{{else}}
-<form method="POST">
-    <label for="r_name">Recipe name:</label><br>
-    <input type="text" id="r_name" name="r_name"><br>
+    <header class="header">
+        <h1>🍳 My Cookbook</h1>
+        <p>A delicious collection of recipes</p>
+    </header>
 
-    <fieldset>
-        <legend>Ingredients:</legend>
-        <label for="i_quantity">Quantity:</label>
-        <input type="text" id="i_quantity" name="i_quantity">
-        <label for="i_name">Quantity:</label>
-        <input type="text" id="i_name" name="i_name">
-        <label for="i_prep">Prep:</label>
-        <input type="text" id="i_prep" name="i_prep">
-        <label for="i_note">Note:</label>
-        <input type="text" id="i_note" name="i_note"><br>
-    </fieldset>
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/create">Add Recipe</a>
+    </nav>
 
-    <fieldset>
-        <legend>Instructions:</legend>
-        <label for="step">Step:</label>
-        <input type="text" id="step" name="step"><br>
-    </fieldset>
+    <main>
+        {{if .Success}}
+        <div class="success-message">
+            <h1>🎉 Thanks for your recipe!</h1>
+            <p>Your recipe has been successfully added to the cookbook.</p>
+            <a href="/" class="nav">← Back to recipes</a>
+        </div>
+        {{else}}
+        <div class="form-container">
+            <h2>Add New Recipe</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="r_name">Recipe Name:</label>
+                    <input type="text" id="r_name" name="r_name" required>
+                </div>
 
-    <label for="yields">Yields:</label><br>
-    <input type="text" id="yields" name="yields"><br>
+                <fieldset>
+                    <legend>🥘 Ingredients</legend>
+                    <div class="form-group">
+                        <label for="i_quantity">Quantity:</label>
+                        <input type="text" id="i_quantity" name="i_quantity" placeholder="e.g., 2 cups">
+                    </div>
+                    <div class="form-group">
+                        <label for="i_name">Ingredient Name:</label>
+                        <input type="text" id="i_name" name="i_name" placeholder="e.g., flour">
+                    </div>
+                    <div class="form-group">
+                        <label for="i_prep">Preparation:</label>
+                        <input type="text" id="i_prep" name="i_prep" placeholder="e.g., chopped, diced">
+                    </div>
+                    <div class="form-group">
+                        <label for="i_note">Note:</label>
+                        <input type="text" id="i_note" name="i_note" placeholder="Any special notes">
+                    </div>
+                </fieldset>
 
-    <label for="keeps_for">Keeps for:</label><br>
-    <input type="text" id="keeps_for" name="keeps_for"><br>
+                <fieldset>
+                    <legend>👩‍🍳 Instructions</legend>
+                    <div class="form-group">
+                        <label for="step">Step:</label>
+                        <input type="text" id="step" name="step" placeholder="Describe each cooking step">
+                    </div>
+                </fieldset>
 
-    <label for="prep_time">Prep time:</label><br>
-    <input type="text" id="prep_time" name="prep_time"><br>
+                <div class="form-group">
+                    <label for="yields">Yields:</label>
+                    <input type="text" id="yields" name="yields" placeholder="e.g., 4 servings">
+                </div>
 
-    <label for="total_time">Total time:</label><br>
-    <input type="text" id="total_time" name="total_time"><br>
+                <div class="form-group">
+                    <label for="keeps_for">Keeps For:</label>
+                    <input type="text" id="keeps_for" name="keeps_for" placeholder="e.g., 3 days refrigerated">
+                </div>
 
-    <fieldset>
-        <legend>Notes:</legend>
-        <label for="note">Note:</label>
-        <input type="text" id="note" name="note"><br>
-    </fieldset>
+                <div class="form-group">
+                    <label for="prep_time">Prep Time:</label>
+                    <input type="text" id="prep_time" name="prep_time" placeholder="e.g., 15 minutes">
+                </div>
 
-    <fieldset>
-        <legend>Tags:</legend>
-        <label for="tag">Tag:</label>
-        <input type="text" id="tag" name="tag"><br>
-    </fieldset>
+                <div class="form-group">
+                    <label for="total_time">Total Time:</label>
+                    <input type="text" id="total_time" name="total_time" placeholder="e.g., 45 minutes">
+                </div>
 
-    <fieldset>
-        <legend>Source:</legend>
-        <label for="s_name">Name:</label>
-        <input type="text" id="s_name" name="s_name"><br>
+                <fieldset>
+                    <legend>📝 Notes</legend>
+                    <div class="form-group">
+                        <label for="note">Note:</label>
+                        <input type="text" id="note" name="note" placeholder="Any additional cooking tips">
+                    </div>
+                </fieldset>
 
-        <label for="s_type">Type:</label><br>
-        <input type="radio" id="s_type_book" name="s_type">
-        <label for="s_type_book">Book</label><br>
-        <input type="radio" id="s_type_website" name="s_type">
-        <label for="s_type_website">Website</label><br>
+                <fieldset>
+                    <legend>🏷️ Tags</legend>
+                    <div class="form-group">
+                        <label for="tag">Tag:</label>
+                        <input type="text" id="tag" name="tag" placeholder="e.g., vegetarian, quick, dessert">
+                    </div>
+                </fieldset>
 
-        <label for="s_link">Link:</label>
-        <input type="url" id="s_link" name="s_link"><br>
-    </fieldset>
+                <fieldset>
+                    <legend>📖 Source</legend>
+                    <div class="form-group">
+                        <label for="s_name">Source Name:</label>
+                        <input type="text" id="s_name" name="s_name" placeholder="e.g., Grandma's Recipe Book">
+                    </div>
 
-    <input type="submit">
-</form>
-{{end}}
+                    <div class="form-group">
+                        <label>Source Type:</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="s_type_book" name="s_type" value="book">
+                                <label for="s_type_book">Book</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="s_type_website" name="s_type" value="website">
+                                <label for="s_type_website">Website</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="s_link">Source Link:</label>
+                        <input type="url" id="s_link" name="s_link" placeholder="https://example.com/recipe">
+                    </div>
+                </fieldset>
+
+                <input type="submit" value="Add Recipe">
+            </form>
+        </div>
+        {{end}}
+    </main>
 </body>
+</html>

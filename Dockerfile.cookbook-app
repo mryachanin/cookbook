@@ -24,6 +24,9 @@ WORKDIR /root/
 # Copy the binary from builder stage
 COPY --from=builder /app/cookbook .
 
+# Copy web assets (templates and CSS)
+COPY --from=builder /app/web ./web
+
 # Expose port
 EXPOSE 8080
 
