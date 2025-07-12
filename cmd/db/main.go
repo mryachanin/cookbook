@@ -13,7 +13,7 @@ func main() {
   var exportPath string
   var usage bool
 
-	flag.StringVar(&op, "o", "", "Operation to perform. Valid choices: import, export, setup")
+	flag.StringVar(&op, "o", "", "Operation to perform. Valid choices: import, export, setup, drop")
   flag.StringVar(&importPath, "i", "",
     "A path to a directory containing recipes in YAML to load into CouchDB.\n" +
     "This is required when passing -o import")
@@ -38,6 +38,8 @@ func main() {
       log.Fatal("Export path must be specified using the '-e' flag. Exiting.")
     }
     ops.ExportRecipes(exportPath)
+  } else if op == "drop" {
+    ops.DropDatabase()
   } else {
     log.Fatalf("No valid command detected. Print usage using -h. Exiting.")
   }
