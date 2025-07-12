@@ -495,12 +495,24 @@ fieldset {
 legend {
     padding: var(--spacing-xs) var(--spacing-md);
     font-weight: 700;
-    color: #2d3748;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+legend::before {
+    content: attr(data-emoji);
+    font-size: 1.3rem;
+    filter: none;
+}
+
+legend .legend-text {
     background: var(--primary-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: 1.1rem;
+    color: #2d3748;
 }
 
 /* Radio button container */
