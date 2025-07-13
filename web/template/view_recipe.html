@@ -138,7 +138,7 @@
                 <div class="tags">
                     {{range $index, $tag := .Tags}}
                     <span class="tag tag-item" data-index="{{$index}}">
-                        <span class="tag-display">{{$tag}}</span>
+                        <a href="/tag/{{$tag}}" class="tag-display tag-link">{{$tag}}</a>
                         <input type="text" class="tag-edit" value="{{$tag}}" style="display: none;">
                         <button class="remove-tag-btn" onclick="removeTag(this)" style="display: none;">×</button>
                     </span>

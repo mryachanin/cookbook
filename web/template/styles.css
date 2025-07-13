@@ -884,6 +884,58 @@ section h3::after {
     left: 0;
 }
 
+.tag-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.tag-link:hover {
+    color: inherit;
+}
+
+.tag-filter-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-light);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tag-filter-header h2 {
+    margin-bottom: var(--spacing-md);
+    color: #1a202c;
+}
+
+.tag-filter-header .tag {
+    margin: 0 var(--spacing-xs);
+}
+
+.tag-filter-header p {
+    color: #4a5568;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.tag-display-only {
+    background: var(--primary-gradient);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-light);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: inline-block;
+}
+
 /* Forms */
 .form-container {
     background: rgba(255, 255, 255, 0.95);

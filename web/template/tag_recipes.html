@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbook - Recipes tagged "{{.Tag}}"</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🍳 My Cookbook</h1>
+        <p>A delicious collection of recipes</p>
+    </header>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/create">Add Recipe</a>
+    </nav>
+
+    <main>
+        <div class="tag-filter-header">
+            <h2><span class="tag-display-only">{{.Tag}}</span></h2>
+            <p>Found {{len .Recipes}} recipe{{if ne (len .Recipes) 1}}s{{end}} with this tag</p>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="🔍 Search these recipes..." class="search-input">
+        </div>
+        
+        <div class="recipe-grid" id="recipeGrid">
+            {{range .Recipes}}
+            <div class="recipe-card" data-name="{{.Value.Name}}">
+                <h3><a href="/recipe/{{.Value.Id}}">{{.Value.Name}}</a></h3>
+            </div>
+            {{end}}
+        </div>
+        
+        {{if eq (len .Recipes) 0}}
+        <div class="no-results">
+            <p>No recipes found with the tag "{{.Tag}}".</p>
+            <a href="/" class="nav">← Back to all recipes</a>
+        </div>
+        {{else}}
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No recipes found matching your search.</p>
+        </div>
+        {{end}}
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const recipeGrid = document.getElementById('recipeGrid');
+        const noResults = document.getElementById('noResults');
+        const recipeCards = document.querySelectorAll('.recipe-card');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            recipeCards.forEach(card => {
+                const recipeName = card.getAttribute('data-name').toLowerCase();
+                const isMatch = recipeName.includes(searchTerm);
+                
+                card.style.display = isMatch ? 'block' : 'none';
+                if (isMatch) visibleCount++;
+            });
+
+            // Show/hide no results message
+            if (visibleCount === 0 && searchTerm !== '') {
+                noResults.style.display = 'block';
+                recipeGrid.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                recipeGrid.style.display = 'grid';
+            }
+        });
+    </script>
+</body>
+</html>

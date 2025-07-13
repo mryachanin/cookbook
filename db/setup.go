@@ -74,16 +74,26 @@ func createDatabase(dbName string, conn *couchdb.Connection, auth *couchdb.Basic
 func createViews(d *couchdb.Database) {
   // Check if design document already exists
   var existingDoc DesignDocument
-  _, err := d.Read("_design/recipe", &existingDoc, nil)
+  rev, err := d.Read("_design/recipe", &existingDoc, nil)
   
+  // If document exists, check if we need to update it
   if err == nil {
-    log.Printf("Design document 'recipe' already exists with views, skipping creation")
-    return
-  }
-
-  // If error is not "not found", it's a real error
-  if couchErr, ok := err.(*couchdb.Error); ok && couchErr.StatusCode != 404 {
-    log.Printf("Error checking existing design document: %s", err)
+    log.Printf("Design document 'recipe' already exists, checking if update is needed")
+    
+    // Check if new view exists
+    if _, hasNewView := existingDoc.Views["getRecipesByTag"]; !hasNewView {
+      log.Printf("Missing 'getRecipesByTag' view, updating design document")
+      // Continue to update the design document
+    } else {
+      log.Printf("All views exist, skipping creation")
+      return
+    }
+  } else {
+    // If error is not "not found", it's a real error
+    if couchErr, ok := err.(*couchdb.Error); ok && couchErr.StatusCode != 404 {
+      log.Printf("Error checking existing design document: %s", err)
+    }
+    rev = "" // No existing document
   }
 
   // Map from view name -> view
@@ -94,6 +104,16 @@ func createViews(d *couchdb.Database) {
           emit(doc.name, doc._id);
         }`,
     },
+    "getRecipesByTag": {
+      Map: `
+        function(doc) {
+          if (doc.tags && doc.tags.length > 0) {
+            for (var i = 0; i < doc.tags.length; i++) {
+              emit(doc.tags[i], {id: doc._id, name: doc.name});
+            }
+          }
+        }`,
+    },
   }
 
   ddoc := DesignDocument{
@@ -101,9 +121,9 @@ func createViews(d *couchdb.Database) {
     Views:    recipeViews,
   }
 
-  log.Printf("Creating views for design document 'recipe'")
+  log.Printf("Creating/updating views for design document 'recipe'")
 
-  if _, err := d.SaveDesignDoc("recipe", ddoc, ""); err != nil {
+  if _, err := d.SaveDesignDoc("recipe", ddoc, rev); err != nil {
     // Check if error is due to design document already existing (race condition)
     if couchErr, ok := err.(*couchdb.Error); ok && couchErr.StatusCode == 409 {
       log.Printf("Design document 'recipe' was created concurrently, this is normal")

@@ -9,6 +9,7 @@ import (
   "errors"
   "html/template"
   "net/http"
+  "net/url"
 )
 
 func GetRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *couchdb.Database) {
@@ -303,4 +304,51 @@ func getValue(slice []string, index int) string {
     return slice[index]
   }
   return ""
+}
+
+type tagViewResultItem struct {
+  Id    string `json:"id"`
+  Key   string `json:"key"`
+  Value struct {
+    Id   string `json:"id"`
+    Name string `json:"name"`
+  } `json:"value"`
+}
+
+type tagViewResult struct {
+  TotalRows int                 `json:"total_rows"`
+  Offset    int                 `json:"offset"`
+  Rows      []tagViewResultItem `json:"rows"`
+}
+
+func GetRecipesByTag(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *couchdb.Database) {
+  tag := ps.ByName("tag")
+
+  if len(tag) == 0 {
+    err := errors.New("Tag must be specified")
+    http.Error(w, err.Error(), http.StatusBadRequest)
+    return
+  }
+
+  result := tagViewResult{}
+  params := url.Values{}
+  params.Set("key", `"`+tag+`"`)
+  
+  if err := db.GetView("recipe", "getRecipesByTag", &result, &params); err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  templateData := struct {
+    Tag     string
+    Recipes []tagViewResultItem
+  }{
+    Tag:     tag,
+    Recipes: result.Rows,
+  }
+
+  templateBytes := appTemplate.MustAsset("web/template/tag_recipes.html")
+  t := template.New("tag_recipes.html")
+  t.Parse(string(templateBytes[:]))
+  t.Execute(w, templateData)
 }
