@@ -533,6 +533,91 @@
                 hideDeleteModal();
             }
         }
+
+        // Add button event listeners
+        document.getElementById('addIngredientBtn').addEventListener('click', addIngredient);
+        document.getElementById('addInstructionBtn').addEventListener('click', addInstruction);
+        document.getElementById('addNoteBtn').addEventListener('click', addNote);
+        document.getElementById('addTagBtn').addEventListener('click', addTag);
+
+        // Add new ingredient
+        function addIngredient() {
+            const container = document.querySelector('.ingredients-list');
+            const ingredientCount = container.children.length;
+            
+            const newIngredient = document.createElement('li');
+            newIngredient.className = 'ingredient-item';
+            newIngredient.setAttribute('data-index', ingredientCount);
+            newIngredient.innerHTML = `
+                <span class="ingredient-display" style="display: none;">
+                    <span class="ingredient-info"></span>
+                </span>
+                <div class="ingredient-edit">
+                    <div class="ingredient-edit-row">
+                        <input type="text" class="ingredient-quantity" value="" placeholder="Quantity">
+                        <input type="text" class="ingredient-name" value="" placeholder="Ingredient">
+                        <input type="text" class="ingredient-prep" value="" placeholder="Preparation">
+                    </div>
+                    <div class="ingredient-edit-row">
+                        <input type="text" class="ingredient-note" value="" placeholder="Note">
+                        <button class="remove-ingredient-btn" onclick="removeIngredient(this)">× Remove</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newIngredient);
+        }
+
+        // Add new instruction
+        function addInstruction() {
+            const container = document.querySelector('.instructions-list');
+            const instructionCount = container.children.length;
+            
+            const newInstruction = document.createElement('div');
+            newInstruction.className = 'instruction-item';
+            newInstruction.setAttribute('data-index', instructionCount);
+            newInstruction.innerHTML = `
+                <span class="instruction-display" style="display: none;"></span>
+                <div class="instruction-edit">
+                    <textarea class="instruction-text" placeholder="Describe this cooking step"></textarea>
+                    <button class="remove-instruction-btn" onclick="removeInstruction(this)">× Remove</button>
+                </div>
+            `;
+            container.appendChild(newInstruction);
+        }
+
+        // Add new note
+        function addNote() {
+            const container = document.querySelector('.notes-list');
+            const noteCount = container.children.length;
+            
+            const newNote = document.createElement('li');
+            newNote.className = 'note-item';
+            newNote.setAttribute('data-index', noteCount);
+            newNote.innerHTML = `
+                <span class="note-display" style="display: none;"></span>
+                <div class="note-edit">
+                    <textarea class="note-text" placeholder="Add a cooking tip or note"></textarea>
+                    <button class="remove-note-btn" onclick="removeNote(this)">× Remove</button>
+                </div>
+            `;
+            container.appendChild(newNote);
+        }
+
+        // Add new tag
+        function addTag() {
+            const container = document.querySelector('.tags');
+            const tagCount = container.children.length;
+            
+            const newTag = document.createElement('span');
+            newTag.className = 'tag tag-item';
+            newTag.setAttribute('data-index', tagCount);
+            newTag.innerHTML = `
+                <span class="tag-display" style="display: none;"></span>
+                <input type="text" class="tag-edit" value="" placeholder="Tag name">
+                <button class="remove-tag-btn" onclick="removeTag(this)" style="display: inline-block;">×</button>
+            `;
+            container.appendChild(newTag);
+        }
     </script>
 </body>
 </html>

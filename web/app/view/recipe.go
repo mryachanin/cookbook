@@ -8,6 +8,7 @@ import (
   "github.com/google/uuid"
   "errors"
   "html/template"
+  "log"
   "net/http"
   "net/url"
 )
@@ -22,7 +23,13 @@ func GetRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db 
   }
 
   recipe := recipe.Recipe{}
-  db.Read(recipeId, &recipe, nil)
+  _, err := db.Read(recipeId, &recipe, nil)
+  if err != nil {
+    log.Printf("Error reading recipe %s: %v", recipeId, err)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
 
   templateBytes := appTemplate.MustAsset("web/template/view_recipe.html")
   t := template.New("view_recipe.html")
@@ -38,11 +45,16 @@ func CreateRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, 
 }
 
 func PostRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *couchdb.Database) {
-  err := r.ParseForm()
+  err := r.ParseMultipartForm(32 << 20) // 32 MB max memory
   if err != nil {
-    http.Error(w, err.Error(), http.StatusBadRequest)
-    return
+    // If not multipart, try regular form parsing
+    err = r.ParseForm()
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusBadRequest)
+      return
+    }
   }
+
 
   // Create a new recipe
   newRecipe := recipe.Recipe{
@@ -165,11 +177,16 @@ func UpdateRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, 
     return
   }
 
-  err = r.ParseForm()
+  err = r.ParseMultipartForm(32 << 20) // 32 MB max memory
   if err != nil {
-    http.Error(w, err.Error(), http.StatusBadRequest)
-    return
+    // If not multipart, try regular form parsing
+    err = r.ParseForm()
+    if err != nil {
+      http.Error(w, err.Error(), http.StatusBadRequest)
+      return
+    }
   }
+
 
   // Update recipe with form data
   updatedRecipe := recipe.Recipe{
@@ -239,26 +256,9 @@ func UpdateRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, 
     return
   }
 
-  // Show success page
-  templateBytes := appTemplate.MustAsset("web/template/edit_recipe.html")
-  t := template.New("edit_recipe.html")
-  
-  // Add template function for adding numbers
-  funcMap := template.FuncMap{
-    "add": func(a, b int) int {
-      return a + b
-    },
-  }
-  t = t.Funcs(funcMap)
-  
-  t.Parse(string(templateBytes[:]))
-  
-  // Create success data with recipe ID for redirect
-  successData := map[string]interface{}{
-    "Success": true,
-    "Id":      recipeId,
-  }
-  t.Execute(w, successData)
+  // Return success response for AJAX call
+  w.WriteHeader(http.StatusOK)
+  w.Write([]byte("Recipe updated successfully"))
 }
 
 func DeleteRecipe(w http.ResponseWriter, r *http.Request, ps httprouter.Params, db *couchdb.Database) {
