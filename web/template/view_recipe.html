@@ -612,8 +612,8 @@
             newTag.className = 'tag tag-item';
             newTag.setAttribute('data-index', tagCount);
             newTag.innerHTML = `
-                <span class="tag-display" style="display: none;"></span>
-                <input type="text" class="tag-edit" value="" placeholder="Tag name">
+                <a href="#" class="tag-display tag-link" style="display: none;"></a>
+                <input type="text" class="tag-edit" value="" placeholder="Tag name" style="display: inline-block;">
                 <button class="remove-tag-btn" onclick="removeTag(this)" style="display: inline-block;">×</button>
             `;
             container.appendChild(newTag);
