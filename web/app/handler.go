@@ -29,6 +29,12 @@ func HandleRequests(c *config.Config, db *couchdb.Database) {
   router.GET("/edit/:id", wrap(view.EditRecipe, db))
   router.POST("/edit/:id", wrap(view.UpdateRecipe, db))
   router.GET("/tag/:tag", wrap(view.GetRecipesByTag, db))
+  
+  // Shopping list routes
+  router.GET("/shopping", wrap(view.GetShoppingList, db))
+  router.POST("/recipe/:id/add-to-shopping", wrap(view.AddToShoppingList, db))
+  router.POST("/shopping/remove", wrap(view.RemoveFromShoppingList, db))
+  router.POST("/shopping/toggle", wrap(view.ToggleShoppingItem, db))
 
   url := c.Host + ":" + strconv.Itoa(c.Port)
   log.Fatal(http.ListenAndServe(url, router))

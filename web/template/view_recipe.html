@@ -14,6 +14,8 @@
 
     <nav class="nav">
         <a href="/">Home</a>
+        <a href="/shopping">🛒 Shopping List</a>
+        <button id="addToShoppingBtn" class="shopping-btn">➕ Add to Shopping List</button>
         <button id="editToggle" class="edit-btn">✏️ Edit Recipe</button>
         <button id="deleteBtn" class="delete-btn">🗑️ Delete Recipe</button>
     </nav>
@@ -211,6 +213,7 @@
         const deleteModal = document.getElementById('deleteModal');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const addToShoppingBtn = document.getElementById('addToShoppingBtn');
 
         // Debug element detection
         console.log('Delete button found:', !!deleteBtn);
@@ -544,6 +547,11 @@
         document.getElementById('addInstructionBtn').addEventListener('click', addInstruction);
         document.getElementById('addNoteBtn').addEventListener('click', addNote);
         document.getElementById('addTagBtn').addEventListener('click', addTag);
+        
+        // Shopping list button
+        if (addToShoppingBtn) {
+            addToShoppingBtn.addEventListener('click', addToShoppingList);
+        }
 
         // Add new ingredient
         function addIngredient() {
@@ -622,6 +630,33 @@
                 <button class="remove-tag-btn" onclick="removeTag(this)" style="display: inline-block;">×</button>
             `;
             container.appendChild(newTag);
+        }
+
+        // Add recipe ingredients to shopping list
+        async function addToShoppingList() {
+            try {
+                const recipeId = window.location.pathname.split('/').pop();
+                const response = await fetch(`/recipe/${recipeId}/add-to-shopping`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    // Show success message
+                    const message = document.createElement('div');
+                    message.className = 'success-message';
+                    message.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #38ef7d; color: white; padding: 1rem; border-radius: 8px; z-index: 9999;';
+                    message.textContent = '✅ Ingredients added to shopping list!';
+                    document.body.appendChild(message);
+                    
+                    setTimeout(() => {
+                        message.remove();
+                    }, 3000);
+                } else {
+                    alert('Error adding ingredients to shopping list');
+                }
+            } catch (error) {
+                alert('Error adding ingredients to shopping list');
+            }
         }
     </script>
 </body>

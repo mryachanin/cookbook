@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbook - Shopping List</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        @media print {
+            .nav, .print-btn, .remove-btn, .no-print {
+                display: none !important;
+            }
+            
+            body {
+                background: white !important;
+                padding: 20px !important;
+                max-width: none !important;
+                color: black !important;
+            }
+            
+            .shopping-list {
+                box-shadow: none !important;
+                border: none !important;
+                background: white !important;
+            }
+            
+            .shopping-item {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                background: white !important;
+                margin-bottom: 8px !important;
+                padding: 8px !important;
+                break-inside: avoid;
+            }
+            
+            .shopping-item.checked {
+                text-decoration: line-through;
+                opacity: 0.6;
+            }
+            
+            h1, h2 {
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🛒 Shopping List</h1>
+        <p>Your grocery shopping list</p>
+    </header>
+
+    <nav class="nav no-print">
+        <a href="/">Home</a>
+        <button onclick="window.print()" class="print-btn">🖨️ Print List</button>
+        <button onclick="clearCheckedItems()" class="clear-btn">🗑️ Remove Checked</button>
+    </nav>
+
+    <main class="shopping-list">
+        {{if .Items}}
+        <div class="shopping-items">
+            {{range $index, $item := .Items}}
+            <div class="shopping-item {{if $item.Checked}}checked{{end}}" data-index="{{$index}}" onclick="toggleItem({{$index}})">
+                <div class="item-content">
+                    <div class="item-main">
+                        <input type="checkbox" class="item-checkbox" {{if $item.Checked}}checked{{end}} onclick="event.preventDefault(); event.stopPropagation(); toggleItem({{$index}});">
+                        <span class="item-quantity">{{$item.Quantity}}</span>
+                        <span class="item-name">{{$item.Name}}{{if $item.Prep}} ({{$item.Prep}}){{end}}</span>
+                    </div>
+                    {{if $item.Note}}
+                    <div class="item-note">• {{$item.Note}}</div>
+                    {{end}}
+                    {{if $item.RecipeName}}
+                    <div class="item-recipe">From: {{$item.RecipeName}}</div>
+                    {{end}}
+                </div>
+                <button class="remove-btn no-print" onclick="event.stopPropagation(); removeItem({{$index}})">×</button>
+            </div>
+            {{end}}
+        </div>
+        
+        <div class="shopping-summary no-print">
+            <p><strong>Total items:</strong> {{len .Items}}</p>
+            <p><strong>Last updated:</strong> {{.UpdatedAt.Format "Jan 2, 2006 at 3:04 PM"}}</p>
+        </div>
+        {{else}}
+        <div class="empty-list">
+            <h2>Your shopping list is empty</h2>
+            <p>Add ingredients from recipes to start building your shopping list!</p>
+            <a href="/" class="btn">Browse Recipes</a>
+        </div>
+        {{end}}
+    </main>
+
+    <script>
+        async function toggleItem(index) {
+            try {
+                const formData = new FormData();
+                formData.append('index', index.toString());
+                
+                const response = await fetch('/shopping/toggle', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    // Toggle the visual state immediately
+                    const item = document.querySelector(`[data-index="${index}"]`);
+                    const checkbox = item.querySelector('.item-checkbox');
+                    
+                    // Toggle checkbox state
+                    checkbox.checked = !checkbox.checked;
+                    
+                    // Update visual state
+                    if (checkbox.checked) {
+                        item.classList.add('checked');
+                    } else {
+                        item.classList.remove('checked');
+                    }
+                } else {
+                    alert('Error updating item');
+                }
+            } catch (error) {
+                alert('Error updating item');
+            }
+        }
+
+        async function removeItem(index) {
+            try {
+                const formData = new FormData();
+                formData.append('index', index.toString());
+                
+                const response = await fetch('/shopping/remove', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    // Reload the page to refresh the list
+                    window.location.reload();
+                } else {
+                    alert('Error removing item');
+                }
+            } catch (error) {
+                alert('Error removing item');
+            }
+        }
+
+        async function clearCheckedItems() {
+            const checkedItems = document.querySelectorAll('.shopping-item.checked');
+            if (checkedItems.length === 0) {
+                return;
+            }
+            
+            // Remove checked items in reverse order to maintain indices
+            const indices = Array.from(checkedItems).map(item => 
+                parseInt(item.getAttribute('data-index'))
+            ).sort((a, b) => b - a);
+            
+            for (const index of indices) {
+                try {
+                    const formData = new FormData();
+                    formData.append('index', index.toString());
+                    
+                    await fetch('/shopping/remove', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } catch (error) {
+                    console.error('Error removing item:', error);
+                }
+            }
+            
+            // Reload the page
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
