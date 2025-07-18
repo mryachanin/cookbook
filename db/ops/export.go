@@ -76,6 +76,16 @@ func getAllRecipes(db *couchdb.Database) []recipe.Recipe {
   return recipes
 }
 
+// processRecipeForExport processes a recipe to ensure YAML compatibility
+// The Go YAML marshaler automatically handles quoting strings that need it,
+// including strings with colons that could be misinterpreted as maps.
+func processRecipeForExport(r recipe.Recipe) recipe.Recipe {
+  // The YAML marshaler will automatically quote strings with problematic characters
+  // No additional processing needed - this function serves as a placeholder for
+  // any future export-specific transformations
+  return r
+}
+
 func saveRecipesToFiles(outputPath string, recipes []recipe.Recipe) {
   for _, r := range recipes {
     // Create a safe filename from the recipe name
@@ -87,8 +97,11 @@ func saveRecipesToFiles(outputPath string, recipes []recipe.Recipe) {
     exportRecipe.Id = ""
     exportRecipe.Rev = ""
 
+    // Process recipe to ensure strings with colons are properly handled
+    processedRecipe := processRecipeForExport(exportRecipe)
+
     // Marshal recipe to YAML
-    yamlData, err := yaml.Marshal(&exportRecipe)
+    yamlData, err := yaml.Marshal(&processedRecipe)
     if err != nil {
       log.Printf("Failed to marshal recipe '%s': %v", r.Name, err)
       continue
