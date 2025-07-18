@@ -3,6 +3,8 @@ package view
 import (
 	"fmt"
 	"log"
+	"regexp"
+	"strconv"
 	"strings"
 	"github.com/mryachanin/cookbook/api/recipe"
 	"github.com/mryachanin/cookbook/api/shopping"
@@ -91,7 +93,29 @@ func AddToShoppingList(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		if err != nil || !isIngredientExcluded(ingredient.Name, exclusionList.ExcludedIngredients) {
 			item := shopping.ShoppingItem{}
 			item.FromIngredient(ingredient, recipeId, recipe.Name)
-			shoppingList.Items = append(shoppingList.Items, item)
+			
+			// Check if this ingredient already exists (match by name only)
+			found := false
+			for i, existingItem := range shoppingList.Items {
+				if strings.EqualFold(existingItem.Name, item.Name) {
+					// Combine quantities
+					shoppingList.Items[i].Quantity = combineQuantities(existingItem.Quantity, item.Quantity)
+					// Keep the original prep and note, add recipe name if different
+					if !strings.Contains(existingItem.RecipeName, recipe.Name) {
+						if existingItem.RecipeName != "" {
+							shoppingList.Items[i].RecipeName = existingItem.RecipeName + ", " + recipe.Name
+						} else {
+							shoppingList.Items[i].RecipeName = recipe.Name
+						}
+					}
+					found = true
+					break
+				}
+			}
+			
+			if !found {
+				shoppingList.Items = append(shoppingList.Items, item)
+			}
 		}
 	}
 	
@@ -364,4 +388,69 @@ func RemoveExcludedIngredient(w http.ResponseWriter, r *http.Request, ps httprou
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Ingredient removed from exclusion list"))
+}
+
+func combineQuantities(qty1, qty2 string) string {
+	if qty1 == "" {
+		return qty2
+	}
+	if qty2 == "" {
+		return qty1
+	}
+
+	// Try to extract numbers and units from both quantities
+	num1, unit1 := parseQuantity(qty1)
+	num2, unit2 := parseQuantity(qty2)
+
+	// If units match or one is empty, we can add the numbers
+	if unit1 == unit2 || unit1 == "" || unit2 == "" {
+		combinedNum := num1 + num2
+		unit := unit1
+		if unit == "" {
+			unit = unit2
+		}
+		
+		// Format the combined quantity
+		if combinedNum == float64(int(combinedNum)) {
+			return fmt.Sprintf("%.0f %s", combinedNum, unit)
+		} else {
+			return fmt.Sprintf("%.1f %s", combinedNum, unit)
+		}
+	}
+
+	// If units don't match, just concatenate with "+"
+	return qty1 + " + " + qty2
+}
+
+func parseQuantity(quantity string) (float64, string) {
+	// Regular expression to match number at the beginning
+	re := regexp.MustCompile(`^(\d+(?:\.\d+)?(?:/\d+)?)\s*(.*)`)
+	matches := re.FindStringSubmatch(strings.TrimSpace(quantity))
+	
+	if len(matches) < 3 {
+		return 0, quantity // Return 0 and full string if no number found
+	}
+
+	numStr := matches[1]
+	unit := strings.TrimSpace(matches[2])
+
+	// Handle fractions like "1/2"
+	if strings.Contains(numStr, "/") {
+		parts := strings.Split(numStr, "/")
+		if len(parts) == 2 {
+			numerator, err1 := strconv.ParseFloat(parts[0], 64)
+			denominator, err2 := strconv.ParseFloat(parts[1], 64)
+			if err1 == nil && err2 == nil && denominator != 0 {
+				return numerator / denominator, unit
+			}
+		}
+	}
+
+	// Parse regular number
+	num, err := strconv.ParseFloat(numStr, 64)
+	if err != nil {
+		return 0, quantity
+	}
+
+	return num, unit
 }
