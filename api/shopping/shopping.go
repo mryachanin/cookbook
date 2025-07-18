@@ -25,6 +25,13 @@ type ShoppingList struct {
 	UpdatedAt time.Time   `json:"updated_at"`
 }
 
+type ExclusionList struct {
+	Id               string    `json:"_id,omitempty"`
+	Rev              string    `json:"_rev,omitempty"`
+	ExcludedIngredients []string `json:"excluded_ingredients"`
+	UpdatedAt        time.Time `json:"updated_at"`
+}
+
 // Convert recipe ingredient to shopping item
 func (item *ShoppingItem) FromIngredient(ingredient recipe.Ingredient, recipeId, recipeName string) {
 	item.Quantity = ingredient.Quantity

@@ -52,8 +52,10 @@
 
     <nav class="nav no-print">
         <a href="/">Home</a>
+        <a href="/shopping/excluded">🚫 Excluded Items</a>
         <button onclick="window.print()" class="print-btn">🖨️ Print List</button>
         <button onclick="clearCheckedItems()" class="clear-btn">🗑️ Remove Checked</button>
+        <button onclick="excludeCheckedItems()" class="exclude-btn">🚫 Exclude Checked</button>
     </nav>
 
     <main class="shopping-list">
@@ -173,6 +175,45 @@
             
             // Reload the page
             window.location.reload();
+        }
+
+        async function excludeCheckedItems() {
+            const checkedItems = document.querySelectorAll('.shopping-item.checked');
+            if (checkedItems.length === 0) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/shopping/exclude-checked', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    const message = await response.text();
+                    // Show success message
+                    const notification = document.createElement('div');
+                    notification.className = 'success-message';
+                    notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #38ef7d; color: white; padding: 1rem; border-radius: 8px; z-index: 9999;';
+                    notification.textContent = `✅ ${message} - these ingredients won't appear in future shopping lists`;
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 4000);
+                    
+                    // Reload the page to refresh the list
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    const errorText = await response.text();
+                    if (response.status !== 400) {
+                        alert('Error excluding items: ' + errorText);
+                    }
+                }
+            } catch (error) {
+                alert('Error excluding items');
+            }
         }
     </script>
 </body>

@@ -1548,7 +1548,7 @@ textarea::placeholder {
     margin-bottom: var(--spacing-lg);
 }
 
-.print-btn, .clear-btn {
+.print-btn, .clear-btn, .exclude-btn {
     background: none;
     color: #667eea;
     border: none;
@@ -1558,7 +1558,7 @@ textarea::placeholder {
     transition: all 0.3s ease;
 }
 
-.print-btn:hover, .clear-btn:hover {
+.print-btn:hover, .clear-btn:hover, .exclude-btn:hover {
     color: #4c51bf;
 }
 
@@ -1576,4 +1576,102 @@ textarea::placeholder {
 
 .shopping-btn:hover {
     color: #4c51bf;
+}
+
+/* Excluded Ingredients Styles */
+.excluded-ingredients {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-medium);
+    backdrop-filter: blur(10px);
+}
+
+.excluded-info {
+    color: #718096;
+    margin-bottom: var(--spacing-lg);
+    font-style: italic;
+}
+
+.excluded-items {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.excluded-item {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-light);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.excluded-item:hover {
+    box-shadow: var(--shadow-medium);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.excluded-name {
+    font-weight: 500;
+    color: #2d3748;
+    flex: 1;
+}
+
+.restore-btn {
+    background: none;
+    color: #38a169;
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border-radius: var(--radius-sm);
+}
+
+.restore-btn:hover {
+    color: #2f855a;
+    background: rgba(56, 161, 105, 0.1);
+}
+
+.excluded-summary {
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    border-left: 4px solid #667eea;
+}
+
+.empty-excluded {
+    text-align: center;
+    padding: var(--spacing-2xl);
+}
+
+.empty-excluded h2 {
+    color: #4a5568;
+    margin-bottom: var(--spacing-md);
+}
+
+.empty-excluded p {
+    color: #718096;
+    margin-bottom: var(--spacing-lg);
+}
+
+.btn {
+    display: inline-block;
+    background: var(--primary-gradient);
+    color: white;
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
 }

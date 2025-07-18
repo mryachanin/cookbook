@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbook - Excluded Ingredients</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🚫 Excluded Ingredients</h1>
+        <p>Ingredients that won't appear in your shopping lists</p>
+    </header>
+
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/shopping">🛒 Shopping List</a>
+    </nav>
+
+    <main class="excluded-ingredients">
+        {{if .ExcludedIngredients}}
+        <div class="excluded-items">
+            <p class="excluded-info">These ingredients are permanently excluded from your shopping lists:</p>
+            
+            {{range $index, $ingredient := .ExcludedIngredients}}
+            <div class="excluded-item">
+                <span class="excluded-name">{{$ingredient}}</span>
+                <button class="restore-btn" onclick="restoreIngredient('{{$ingredient}}')">↩️ Restore</button>
+            </div>
+            {{end}}
+        </div>
+        
+        <div class="excluded-summary">
+            <p><strong>Total excluded:</strong> {{len .ExcludedIngredients}} ingredient(s)</p>
+            <p><strong>Last updated:</strong> {{.UpdatedAt.Format "Jan 2, 2006 at 3:04 PM"}}</p>
+        </div>
+        {{else}}
+        <div class="empty-excluded">
+            <h2>No excluded ingredients</h2>
+            <p>You haven't excluded any ingredients yet. When you're on your shopping list, you can check items and click "🚫 Exclude Checked" to permanently remove them from future shopping lists.</p>
+            <a href="/shopping" class="btn">Go to Shopping List</a>
+        </div>
+        {{end}}
+    </main>
+
+    <script>
+        async function restoreIngredient(ingredientName) {
+            try {
+                const formData = new FormData();
+                formData.append('ingredient', ingredientName);
+                
+                const response = await fetch('/shopping/excluded/remove', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    // Show success message
+                    const message = document.createElement('div');
+                    message.className = 'success-message';
+                    message.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #38ef7d; color: white; padding: 1rem; border-radius: 8px; z-index: 9999;';
+                    message.textContent = `✅ "${ingredientName}" restored - it will now appear in shopping lists again`;
+                    document.body.appendChild(message);
+                    
+                    setTimeout(() => {
+                        message.remove();
+                    }, 3000);
+                    
+                    // Reload the page to refresh the list
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error restoring ingredient');
+                }
+            } catch (error) {
+                alert('Error restoring ingredient');
+            }
+        }
+    </script>
+</body>
+</html>
