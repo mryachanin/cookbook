@@ -64,10 +64,15 @@
                 <ul class="ingredients-list">
                     {{range $index, $ingredient := .Ingredients}}
                     <li class="ingredient-item" data-index="{{$index}}">
-                        <span class="ingredient-display">
-                            {{$ingredient.Quantity}} {{$ingredient.Name}}{{if $ingredient.Prep}} ({{$ingredient.Prep}}){{end}}
-                            {{if $ingredient.Note}}<br><em>{{$ingredient.Note}}</em>{{end}}
-                        </span>
+                        <div class="ingredient-display ingredient-compact">
+                            <div class="ingredient-main">
+                                <span class="ingredient-qty">{{$ingredient.Quantity}}</span>
+                                <span class="ingredient-name">{{$ingredient.Name}}{{if $ingredient.Prep}} <span class="ingredient-prep">({{$ingredient.Prep}})</span>{{end}}</span>
+                            </div>
+                            {{if $ingredient.Note}}
+                            <div class="ingredient-note">• {{$ingredient.Note}}</div>
+                            {{end}}
+                        </div>
                         <div class="ingredient-edit" style="display: none;">
                             <div class="ingredient-edit-row">
                                 <input type="text" class="ingredient-quantity" value="{{$ingredient.Quantity}}" placeholder="Quantity">

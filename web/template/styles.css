@@ -1367,3 +1367,59 @@ textarea::placeholder {
         padding: var(--spacing-md);
     }
 }
+
+/* Compact ingredient display */
+.ingredient-compact {
+    line-height: 1.4;
+}
+
+.ingredient-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.ingredient-qty {
+    font-weight: 600;
+    color: #667eea;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.ingredient-name {
+    font-weight: 500;
+    color: #2d3748;
+    flex: 1;
+}
+
+.ingredient-prep {
+    color: #718096;
+    font-style: italic;
+}
+
+.ingredient-note {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+}
+
+/* More compact ingredients list */
+.ingredients-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.ingredients-list li {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    padding-left: 4rem; /* More space for emoji */
+    margin-bottom: 0; /* Remove margin since grid handles spacing */
+}
+
+.ingredients-list li::before {
+    top: var(--spacing-sm);
+    transform: none;
+    left: var(--spacing-md); /* Adjust emoji position */
+}
