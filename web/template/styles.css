@@ -1548,7 +1548,7 @@ textarea::placeholder {
     margin-bottom: var(--spacing-lg);
 }
 
-.print-btn, .clear-btn, .exclude-btn {
+.print-btn, .clear-btn, .clear-all-btn, .exclude-btn {
     background: none;
     color: #667eea;
     border: none;
@@ -1558,7 +1558,7 @@ textarea::placeholder {
     transition: all 0.3s ease;
 }
 
-.print-btn:hover, .clear-btn:hover, .exclude-btn:hover {
+.print-btn:hover, .clear-btn:hover, .clear-all-btn:hover, .exclude-btn:hover {
     color: #4c51bf;
 }
 

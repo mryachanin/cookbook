@@ -55,6 +55,7 @@
         <a href="/shopping/excluded">🚫 Excluded Items</a>
         <button onclick="window.print()" class="print-btn">🖨️ Print List</button>
         <button onclick="clearCheckedItems()" class="clear-btn">🗑️ Remove Checked</button>
+        <button onclick="clearAllItems()" class="clear-all-btn">🗑️ Clear All</button>
         <button onclick="excludeCheckedItems()" class="exclude-btn">🚫 Exclude Checked</button>
     </nav>
 
@@ -214,6 +215,35 @@
             } catch (error) {
                 alert('Error excluding items');
             }
+        }
+
+        async function clearAllItems() {
+            const allItems = document.querySelectorAll('.shopping-item');
+            if (allItems.length === 0) {
+                return;
+            }
+            
+            // Remove all items in reverse order to maintain indices
+            const indices = Array.from(allItems).map(item => 
+                parseInt(item.getAttribute('data-index'))
+            ).sort((a, b) => b - a);
+            
+            for (const index of indices) {
+                try {
+                    const formData = new FormData();
+                    formData.append('index', index.toString());
+                    
+                    await fetch('/shopping/remove', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } catch (error) {
+                    console.error('Error removing item:', error);
+                }
+            }
+            
+            // Reload the page
+            window.location.reload();
         }
     </script>
 </body>
