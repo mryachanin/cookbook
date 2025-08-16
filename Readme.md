@@ -1,5 +1,5 @@
 # Disclaimer
-I coded some of this initially, myself. Most recent pushes are 100% vibe coded and not checked for accuracy or tested. It's good enough for personal use, but maybe not yours ¯\_(ツ)_/¯
+I coded some of this initially, myself. Most recent pushes are 100% vibe coded and not checked for accuracy or tested. It's good enough for personal use, but maybe not yours ¯\\_(ツ)_/¯
 
 # Cookbook Deployment Guide
 
